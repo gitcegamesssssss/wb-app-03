@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Current Jobs</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="../assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="navbar-main">
+    </div>
+    <div class="container-fluid">
+        <div class="container-fluid mt-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="mx-md-3 font-weight-bold">
+                        <span class="oi oi-calendar"></span>
+                        <span>Date : </span>
+                        <span id="current-date" class="text-primary"></span>
+                    </span>
+                    <span class="mx-md-3 font-weight-bold">
+                        <span class="oi oi-task"></span>
+                        <span>jobs : </span>
+                        <span id="jobs-on-queue" class="text-primary">3</span>
+                    </span>
+                </div>
+                <div class="col-md-6">
+                    <div class="btn-group float-md-right" role="group">
+                        <button type="button" class="btn btn-primary" onclick="recalCurrentJobs()"><span
+                                class="oi oi-reload"></span>
+                            Refresh</button>
+                        <a name="" id="" class="btn btn-primary" href="./order-create.html" role="button"><span
+                                class="oi oi-plus"></span>
+                            Order </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="table-jobs-current">table-jobs-current field . . .</div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            t_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+            t_n = new Date();
+            t_y = t_n.getFullYear();
+            t_m = t_n.getMonth() + 1;
+            t_d = t_n.getDate();
+            t_ds = t_n.getDay();
+            document.getElementById("current-date").innerHTML = t_days[t_ds] + " " + t_m + "/" + t_d + "/" + t_y;
+        });
+        function inc() {
+            var curVal = document.getElementById("jobs-on-queue").innerText;
+            document.getElementById("jobs-on-queue").innerHTML = parseInt(curVal) + 1;
+        }
+        function recalCurrentJobs() {
+            var cur_table = document.getElementById("tag-table-jobs-current");
+            var rows_table = cur_table.rows.length;
+            var row_tmp;
+            var count = 0;
+            for (i = 1; i < rows_table; i++) {
+                tmp = cur_table.rows.item(i).cells.length;
+                if (tmp != 1) {
+                    count++;
+                }                
+            }    
+            document.getElementById("jobs-on-queue").innerHTML = count;      
+        }
+        $('#navbar-main').load("../components/navbar-main/navbar-main.html #navbar-main");
+        $.getScript("../components/navbar-main/navbar-main.js");
+
+        $('#table-jobs-current').load("../components/table-jobs-current/table-jobs-current.php #table-jobs-current");
+    </script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../assets/bootstrap/js/bootstrap.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
