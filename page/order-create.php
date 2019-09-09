@@ -31,19 +31,20 @@ $conn = mysqli_connect($host, $username, $password, $database);
                 <div class="row">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="input-order-id">
+                            <span class="input-group-text">
                                 <span class="oi oi-layers"></span>&nbsp;Order id</span>
                         </div>
-                        <input type="text" class="form-control text-center" disabled value="1">
+                        <input type="text" class="form-control text-center" id="input-order-id" disabled value="1">
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="input-customer-id">
+                            <span class="input-group-text">
                                 <span class="oi oi-people"></span>&nbsp;Customer</span>
                         </div>
-                        <input type="text" class="form-control text-center" value="GUEST">
+                        <input type="text" class="form-control text-center" id="input-customer-show" value="Guest">
+                        <input type="hidden" class="form-control text-center" id="input-customer-id" value="1">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button"><span class="oi oi-magnifying-glass"></span></button>
                         </div>
@@ -89,8 +90,10 @@ $conn = mysqli_connect($host, $username, $password, $database);
                             </table>
                         </div>
                         <div class="card-footer">
-                            <button type="button" class="btn btn-success float-right" onclick="alertArrItems()">
+                            <button type="button" class="btn btn-success float-right" onclick="exeSQL(createSQL());">
                                 confirm<span class="oi oi-task ml-1"></span></button>
+
+                            <span id="loader" style="display:none;">adding...</span>
                         </div>
                     </div>
                 </div>
@@ -348,11 +351,38 @@ $conn = mysqli_connect($host, $username, $password, $database);
                     </div>
                 </div>
             </div>
+            <!-- modal-adding-loader -->
+            <div class="modal" id="modal-adding-loader">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div id="loader-loading">
+                                    <span class="float-left">
+                                        <img src="../assets/icon/loader/primary-loader.svg">
+                                    </span>
+                                    <span>
+                                        <h3 class="text-primary float-right mt-3 mr-2">Adding order please wait . . .</h3>
+                                    </span>
+                                </div>
+                                <div id="loader-complete" style="display:none;">
+                                    <span>
+                                        <h3 class="text-success text-center w3-animate-zoom">
+                                            <span class="oi oi-check"></span> Successful
+                                        </h3>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script>
         $('#navbar-main').load("../components/navbar-main/navbar-main.html #navbar-main");
         $.getScript("../components/navbar-main/navbar-main.js");
+
         //added items (items storage & items status)
         var arrItems = [];
         var totalOrders = 0;
@@ -362,6 +392,22 @@ $conn = mysqli_connect($host, $username, $password, $database);
         var tmpDishProp;
         var tmpSnackProp;
         //==================================================================================   
+        function exeSQL(sql) { //ajax function   
+            document.getElementById("loader-complete").style.display = "none";
+            document.getElementById("loader-loading").style.display = "initial";
+            $("#modal-adding-loader").modal('show');
+            $.ajax({
+                url: `../ajax/exeSQL.php?
+                id=${sql}`,
+                type: 'GET',
+                success: function(result) {
+                    console.log(result);
+                    document.getElementById("loader-loading").style.display = "none";
+                    document.getElementById("loader-complete").style.display = "initial";
+                }
+            });
+        }
+
         function addBev() {
             updateBevProperties();
             arrItems.push(tmpBevProp);
@@ -586,14 +632,35 @@ $conn = mysqli_connect($host, $username, $password, $database);
         }
 
         function alertArrItems() {
-            var msg = ``;
+            /*var msg = ``;
             arrItems.forEach(element => {
                 msg += ` ${element.details}\n`;
                 msg += ` Quantities: ${element.quantities}\n`;
                 msg += ` Total Cost: ${element.cost_total}\n`;
                 msg += "========================================\n";
             });
-            alert(msg);
+            alert(msg);*/
+        }
+
+        function createSQL() {
+            var orderId = document.getElementById("input-order-id").value;
+            var cusId = document.getElementById("input-customer-id").value;
+            var agentId = 1; //root         
+            var mods;
+            var sql =
+                `INSERT INTO proc_trans (order_id, cus_id, item_id, mod_item, abs_cost, unit, agent_id) VALUES `;
+            arrItems.forEach(element => {
+                if (element.mods == "" || element.mods == undefined) {
+                    mods = 'NULL';
+                } else {
+                    mods = `'${element.mods}'`;
+                }
+                sql +=
+                    `(${orderId},${cusId},${element.id},${mods},${element.cost_total},${element.quantities},${agentId}),`;
+            });
+            sql = sql.slice(0, -1);
+            return sql;
+            //console.log(sql);
         }
 
         function updateTotalOrders() {
