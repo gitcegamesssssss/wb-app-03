@@ -4,6 +4,11 @@ $database = "wbdb";
 $username = "root";
 $password = "";
 $conn = mysqli_connect($host, $username, $password, $database);
+
+//order_id generating
+$order_id = mysqli_query($conn, "SELECT cur_order_id FROM status WHERE id = 1");
+$order_id = mysqli_fetch_array($order_id);
+$order_id = $order_id['cur_order_id'] + 1;
 ?>
 <!doctype html>
 <html lang="en">
@@ -34,7 +39,7 @@ $conn = mysqli_connect($host, $username, $password, $database);
                             <span class="input-group-text">
                                 <span class="oi oi-layers"></span>&nbsp;Order id</span>
                         </div>
-                        <input type="text" class="form-control text-center" id="input-order-id" disabled value="1">
+                        <input type="text" class="form-control text-center" id="input-order-id" disabled value="<?php echo $order_id; ?>">
                     </div>
                 </div>
                 <div class="row">
@@ -91,9 +96,7 @@ $conn = mysqli_connect($host, $username, $password, $database);
                         </div>
                         <div class="card-footer">
                             <button type="button" class="btn btn-success float-right" onclick="exeSQL(createSQL());">
-                                confirm<span class="oi oi-task ml-1"></span></button>
-
-                            <span id="loader" style="display:none;">adding...</span>
+                                confirm<span class="oi oi-task ml-1"></span></button>                            
                         </div>
                     </div>
                 </div>
@@ -372,6 +375,13 @@ $conn = mysqli_connect($host, $username, $password, $database);
                                         </h3>
                                     </span>
                                 </div>
+                                <div id="loader-failed" style="display:none;">
+                                    <span>
+                                        <h3 class="text-danger text-center w3-animate-zoom">
+                                            <span class="oi oi-circle-x"></span> failed
+                                        </h3>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -392,20 +402,30 @@ $conn = mysqli_connect($host, $username, $password, $database);
         var tmpDishProp;
         var tmpSnackProp;
         //==================================================================================   
-        function exeSQL(sql) { //ajax function   
-            document.getElementById("loader-complete").style.display = "none";
-            document.getElementById("loader-loading").style.display = "initial";
-            $("#modal-adding-loader").modal('show');
-            $.ajax({
-                url: `../ajax/exeSQL.php?
-                id=${sql}`,
-                type: 'GET',
-                success: function(result) {
-                    console.log(result);
-                    document.getElementById("loader-loading").style.display = "none";
-                    document.getElementById("loader-complete").style.display = "initial";
-                }
-            });
+        function exeSQL(sql) { //ajax function  
+            if (sql == null) {
+                alert("list empty!");
+            } else {
+                document.getElementById("loader-complete").style.display = "none";
+                document.getElementById("loader-failed").style.display = "none";
+                document.getElementById("loader-loading").style.display = "initial";
+                $("#modal-adding-loader").modal('show');
+                $.ajax({
+                    url: `../ajax/addItems.php?
+                sql=${sql}&cur_order_id=${document.getElementById("input-order-id").value}`,
+                    type: 'GET',
+                    success: function(result) {
+                        console.log(result);
+                        document.getElementById("loader-loading").style.display = "none";
+                        if (result != '2') { //0 or 1 is an error code [0 = mysql connection error, 1 = sql execution error]
+                            document.getElementById("loader-failed").style.display = "initial";
+                        } else {
+                            document.getElementById("loader-complete").style.display = "initial";
+                            clearTable();
+                        }
+                    }
+                });
+            }
         }
 
         function addBev() {
@@ -643,23 +663,27 @@ $conn = mysqli_connect($host, $username, $password, $database);
         }
 
         function createSQL() {
-            var orderId = document.getElementById("input-order-id").value;
-            var cusId = document.getElementById("input-customer-id").value;
-            var agentId = 1; //root         
-            var mods;
-            var sql =
-                `INSERT INTO proc_trans (order_id, cus_id, item_id, mod_item, abs_cost, unit, agent_id) VALUES `;
-            arrItems.forEach(element => {
-                if (element.mods == "" || element.mods == undefined) {
-                    mods = 'NULL';
-                } else {
-                    mods = `'${element.mods}'`;
-                }
-                sql +=
-                    `(${orderId},${cusId},${element.id},${mods},${element.cost_total},${element.quantities},${agentId}),`;
-            });
-            sql = sql.slice(0, -1);
-            return sql;
+            if (arrItems.length == 0) {
+                return null;
+            } else {
+                var orderId = document.getElementById("input-order-id").value;
+                var cusId = document.getElementById("input-customer-id").value;
+                var agentId = 1; //root         
+                var mods;
+                var sql =
+                    `INSERT INTO proc_trans (order_id, cus_id, item_id, mod_item, abs_cost, unit, agent_id, item_details) VALUES `;
+                arrItems.forEach(element => {
+                    if (element.mods == "" || element.mods == undefined) {
+                        mods = 'NULL';
+                    } else {
+                        mods = `'${element.mods}'`;
+                    }
+                    sql +=
+                        `(${orderId},${cusId},${element.id},${mods},${element.cost_total},${element.quantities},${agentId}, '${element.details}'),`;
+                });
+                sql = sql.slice(0, -1);
+                return sql;
+            }
             //console.log(sql);
         }
 

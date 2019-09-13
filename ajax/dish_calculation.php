@@ -25,7 +25,7 @@ if ($_GET['mods'] != "") {
         $res_tmp = mysqli_query($conn, "SELECT name, cost FROM mod_dish WHERE id = $tmp");
         $row_tmp = mysqli_fetch_array($res_tmp);
         //append item_details
-        $item_details .= " + " . $row_tmp['name'];
+        $item_details .= "/ " . $row_tmp['name'];
         //append cost_per_piece
         $cost_per_piece += intval($row_tmp['cost']);
     }

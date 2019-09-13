@@ -1,3 +1,30 @@
+<?php
+$host = "localhost";
+$database = "wbdb";
+$username = "root";
+$password = "";
+$conn = mysqli_connect($host, $username, $password, $database);
+$sql =
+    'SELECT proc_trans.id, 
+    proc_trans.order_id, 
+    proc_trans.cus_id, 
+    customers.name as cus_name, 
+    proc_trans.item_id, 
+    items.name as item_name, 
+    proc_trans.abs_cost, 
+    proc_trans.unit,
+    proc_trans.agent_id, 
+    agent.name as agent_name, 
+    proc_trans.add_date, 
+    proc_trans.item_details,
+    proc_trans.work_stat
+    FROM proc_trans
+    JOIN customers ON proc_trans.cus_id = customers.id
+    JOIN items ON proc_trans.item_id = items.id
+    JOIN agent ON proc_trans.agent_id = agent.id
+    ORDER BY proc_trans.id ASC';
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -15,94 +42,49 @@
 <body>
     <div id="table-jobs-current">
         <div class="container-fluid mt-2">
-            <table class="table table-bordered table-hover table-responsive-sm text-nowrap table-sm" id="tag-table-jobs-current">
-                <thead>
+            <table class="table table-bordered table-hover table-responsive-sm" id="tag-table-jobs-current">
+                <thead class="bg-primary thead-dark">
                     <tr>
                         <th>#</th>
-                        <th>test</th>
-                        <th>price</th>
-                        <th>unit</th>
-                        <th>total</th>
+                        <th>Order details (Menu Name + Modification)</th>
+                        <th>Cost per piece</th>
+                        <th>Quantities</th>
+                        <th>Cost total</th>
                         <th>work status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="6">Order ID : #1 (MarkOtto, AgentMark, 100฿)</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>test</td>
-                        <td>50</td>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>received</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>test</td>
-                        <td>50</td>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>received</td>
-                    </tr>
-                    <tr>
-                        <td colspan="6">Order ID : #1 (MarkOtto, AgentMark, 100฿)</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>test</td>
-                        <td>50</td>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>received</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>test</td>
-                        <td>50</td>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>received</td>
-                    </tr>
-                    <tr>
-                        <td colspan="6">Order ID : #1 (MarkOtto, AgentMark, 100฿)</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>test</td>
-                        <td>50</td>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>received</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>test</td>
-                        <td>50</td>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>received</td>
-                    </tr>
-                    <tr>
-                        <td colspan="6">Order ID : #1 (MarkOtto, AgentMark, 100฿)</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>test</td>
-                        <td>50</td>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>received</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>test</td>
-                        <td>50</td>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>received</td>
-                    </tr>
+                    <?php
+                    $result = mysqli_query($conn, $sql);
+                    $rem_order_id = 0;
+                    $i = 1;
+                    while ($row = mysqli_fetch_array($result)) {                       
+                        $cur_order_id = $row['order_id'];
+
+                        $cost_total = $row['abs_cost'] * $row['unit'];
+                        $arrStr_workstat = ["received", "progress", "done"];
+                        $workstat = $arrStr_workstat[$row['work_stat']];
+                        if ($cur_order_id != $rem_order_id) {
+                            $i = 1;
+                            echo "
+                            <tr>
+                                <td colspan='6'>Order ID : #$cur_order_id (Customer: $row[cus_name], Agent: $row[agent_name])</td>
+                            </tr>";
+                            $rem_order_id = $cur_order_id;
+                        }
+                        echo "
+                        <tr class='table-secondary'>
+                            <td>$i</td>
+                            <td>$row[item_details]</td>
+                            <td>$row[abs_cost]</td>
+                            <td>$row[unit]</td>
+                            <td>$cost_total</td>
+                            <td>$workstat</td>
+                        </tr>
+                        ";
+                        $i++;                        
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
