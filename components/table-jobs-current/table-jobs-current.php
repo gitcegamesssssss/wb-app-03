@@ -22,7 +22,7 @@ $sql =
     JOIN customers ON proc_trans.cus_id = customers.id
     JOIN items ON proc_trans.item_id = items.id
     JOIN agent ON proc_trans.agent_id = agent.id
-    ORDER BY proc_trans.id ASC';
+    ORDER BY proc_trans.order_id ASC';
 
 ?>
 <!doctype html>
@@ -61,14 +61,22 @@ $sql =
                     while ($row = mysqli_fetch_array($result)) {                       
                         $cur_order_id = $row['order_id'];
 
+                        $date_time = explode(" ",$row['add_date']);
                         $cost_total = $row['abs_cost'] * $row['unit'];
                         $arrStr_workstat = ["received", "progress", "done"];
                         $workstat = $arrStr_workstat[$row['work_stat']];
                         if ($cur_order_id != $rem_order_id) {
                             $i = 1;
+                            $delay = $i*0.1;                            
                             echo "
                             <tr>
-                                <td colspan='6'>Order ID : #$cur_order_id (Customer: $row[cus_name], Agent: $row[agent_name])</td>
+                                <td colspan='6'>Order ID : #$cur_order_id (Customer: $row[cus_name], Agent: $row[agent_name]) $date_time[1]
+                                <span class='float-right'>
+                                    <a class='btn btn-primary btn-sm' href='./order-edit.php?order_id=$cur_order_id' role='button'>
+                                        <span class='oi oi-pencil'></span>
+                                    </a>
+                                </span>
+                                </td>
                             </tr>";
                             $rem_order_id = $cur_order_id;
                         }

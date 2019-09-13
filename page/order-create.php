@@ -440,7 +440,7 @@ $order_id = $order_id['cur_order_id'] + 1;
             var cell3 = row.insertCell(2);
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
-            row.classList.add("w3-animate-top");
+            row.classList.add("w3-animate-zoom");
             cell1.innerHTML = tmpBevProp.details;
             cell1.classList.add("text-left");
             cell2.innerHTML = tmpBevProp.cost_per_piece;
