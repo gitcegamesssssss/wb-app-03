@@ -679,7 +679,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                         mods = `'${element.mods}'`;
                     }
                     sql +=
-                        `(${orderId},${cusId},${element.id},${mods},${element.cost_total},${element.quantities},${agentId}, '${element.details}'),`;
+                        `(${orderId},${cusId},${element.id},${mods},${element.cost_per_piece},${element.quantities},${agentId}, '${element.details}'),`;
                 });
                 sql = sql.slice(0, -1);
                 return sql;
