@@ -3,6 +3,7 @@ var arrPath = pathname.split('/');
 var arrCur = arrPath[arrPath.length - 1].split('.');
 var page = arrCur[0];
 console.log(page);
+document.getElementById("infoUsr").innerText = sessionStorage.wbUsr;
 
 switch (page) {
     case 'conn-device':

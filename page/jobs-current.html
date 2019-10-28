@@ -9,12 +9,13 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>   
+    <script src="/wb-app-03/js/main.js"></script>
     <link href="../assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 
-<body>
+<body style="display:none">
     <div id="navbar-main">
     </div>
     <div class="container-fluid">
@@ -37,7 +38,7 @@
                         <button type="button" class="btn btn-primary" onclick="reloadTable()"><span
                                 class="oi oi-reload"></span>
                             Refresh</button>
-                        <a name="" id="" class="btn btn-primary" href="./order-create.php" role="button"><span
+                        <a name="" id="" class="btn btn-primary" href="/wb-app-03/page/order-create.php" role="button"><span
                                 class="oi oi-plus"></span>
                             Order </a>
                     </div>
@@ -47,6 +48,8 @@
         <div id="table-jobs-current">table-jobs-current field . . .</div>
     </div>
     <script>
+        checkToken(sessionStorage.wbUsr, sessionStorage.wbToken);
+
         $('#navbar-main').load("../components/navbar-main/navbar-main.html #navbar-main");
         $.getScript("../components/navbar-main/navbar-main.js");
 

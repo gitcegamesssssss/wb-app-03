@@ -21,12 +21,13 @@ $order_id = $order_id['cur_order_id'] + 1;
 
     <!-- Bootstrap CSS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/wb-app-03/js/main.js"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link href="../assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
 </head>
 
-<body>
+<body style="display:none">
     <div class="w3-animate-left" id="navbar-main">
     </div>
     <div class="container-fluid m-3">
@@ -390,6 +391,8 @@ $order_id = $order_id['cur_order_id'] + 1;
         </div>
     </div>
     <script>
+        checkToken(sessionStorage.wbUsr, sessionStorage.wbToken);
+        
         $('#navbar-main').load("../components/navbar-main/navbar-main.html #navbar-main");
         $.getScript("../components/navbar-main/navbar-main.js");
 
