@@ -22,8 +22,8 @@ $sql =
     JOIN customers ON proc_trans.cus_id = customers.id
     JOIN items ON proc_trans.item_id = items.id
     JOIN agent ON proc_trans.agent_id = agent.id
+    WHERE add_date >= "'.date("Y-m-d").' 00:00:00"   
     ORDER BY proc_trans.order_id ASC';
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -58,13 +58,16 @@ $sql =
                     $result = mysqli_query($conn, $sql);
                     $rem_order_id = 0;
                     $i = 1;
+                    $j = 0;
                     while ($row = mysqli_fetch_array($result)) {                       
                         $cur_order_id = $row['order_id'];
 
                         $date_time = explode(" ",$row['add_date']);
                         $cost_total = $row['abs_cost'] * $row['unit'];
                         $arrStr_workstat = ["received", "progress", "done"];
+                        $arrColor = ['text-danger', 'text-warning', 'text-success'];
                         $workstat = $arrStr_workstat[$row['work_stat']];
+                        $workStatColor = $arrColor[$row['work_stat']];
                         if ($cur_order_id != $rem_order_id) {
                             $i = 1;
                             $delay = $i*0.1;                            
@@ -81,16 +84,17 @@ $sql =
                             $rem_order_id = $cur_order_id;
                         }
                         echo "
-                        <tr class='table-secondary'>
+                        <tr>
                             <td>$i</td>
                             <td>$row[item_details]</td>
                             <td>$row[abs_cost]</td>
                             <td>$row[unit]</td>
                             <td>$cost_total</td>
-                            <td>$workstat</td>
+                            <td id='work-status-$j' class='font-weight-bold $workStatColor'>$workstat</td>
                         </tr>
                         ";
-                        $i++;                        
+                        $i++;   
+                        $j++;                     
                     }
                     ?>
                 </tbody>

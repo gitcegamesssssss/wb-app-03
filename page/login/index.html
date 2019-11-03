@@ -94,8 +94,10 @@
 						window.location.href = "/wb-app-03/page/login/";											
 					}else{
 						//save token
+						var splitedData = data.split(" ");
 						sessionStorage.setItem("wbUsr", username);
-						sessionStorage.setItem("wbToken", data);
+						sessionStorage.setItem("wbToken", splitedData[0]);
+						sessionStorage.setItem("wbUsrId", splitedData[1]);
 						alert(`saved token :\n '${data}'`);
 						window.location.href = "/wb-app-03/page/jobs-current.html";
 					}	

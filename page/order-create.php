@@ -671,7 +671,7 @@ $order_id = $order_id['cur_order_id'] + 1;
             } else {
                 var orderId = document.getElementById("input-order-id").value;
                 var cusId = document.getElementById("input-customer-id").value;
-                var agentId = 1; //root         
+                var agentId = sessionStorage.wbUsrId; //root         
                 var mods;
                 var sql =
                     `INSERT INTO proc_trans (order_id, cus_id, item_id, mod_item, abs_cost, unit, agent_id, item_details) VALUES `;
