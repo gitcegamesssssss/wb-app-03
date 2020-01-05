@@ -425,7 +425,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                         } else {
                             document.getElementById("loader-complete").style.display = "initial";
                             clearTable();
-                            $.ajax({url:'/wb-app-03/ajax/service/test.php', type: 'GET'});
+                            $.ajax({url:'/wb-app-03/ajax/service/signal.php', type: 'GET'});
                             window.location.replace("/wb-app-03/page/jobs-current.html");
                         }
                     }
