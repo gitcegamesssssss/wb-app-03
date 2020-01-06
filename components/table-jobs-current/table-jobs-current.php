@@ -22,8 +22,8 @@ $sql =
     JOIN customers ON proc_trans.cus_id = customers.id
     JOIN items ON proc_trans.item_id = items.id
     JOIN agent ON proc_trans.agent_id = agent.id
-    WHERE add_date >= "'.date("Y-m-d").' 00:00:00"   
-    ORDER BY proc_trans.order_id ASC';
+    WHERE add_date >= "' . date("Y-m-d") . ' 00:00:00"   
+    ORDER BY proc_trans.id ASC';
 ?>
 <!doctype html>
 <html lang="en">
@@ -59,10 +59,10 @@ $sql =
                     $rem_order_id = 0;
                     $i = 1;
                     $j = 0;
-                    while ($row = mysqli_fetch_array($result)) {                       
+                    while ($row = mysqli_fetch_array($result)) {
                         $cur_order_id = $row['order_id'];
 
-                        $date_time = explode(" ",$row['add_date']);
+                        $date_time = explode(" ", $row['add_date']);
                         $cost_total = $row['abs_cost'] * $row['unit'];
                         $arrStr_workstat = ["received", "progress", "done"];
                         $arrColor = ['text-danger', 'text-warning', 'text-success'];
@@ -70,7 +70,7 @@ $sql =
                         $workStatColor = $arrColor[$row['work_stat']];
                         if ($cur_order_id != $rem_order_id) {
                             $i = 1;
-                            $delay = $i*0.1;                            
+                            $delay = $i * 0.1;
                             echo "
                             <tr>
                                 <td colspan='6'>Order ID : #$cur_order_id (Customer: $row[cus_name], Agent: $row[agent_name]) $date_time[1]
@@ -84,7 +84,7 @@ $sql =
                             $rem_order_id = $cur_order_id;
                         }
                         echo "
-                        <tr>
+                        <tr onclick=$('#$row[id]').toggle()>
                             <td>$i</td>
                             <td>$row[item_details]</td>
                             <td>$row[abs_cost]</td>
@@ -93,8 +93,21 @@ $sql =
                             <td id='work-status-$j' class='font-weight-bold $workStatColor'>$workstat</td>
                         </tr>
                         ";
-                        $i++;   
-                        $j++;                     
+                        echo "
+                        <tr class='table-active' id='$row[id]' style='display:none;'>
+                            <td colspan='6' class='w3-animate-opacity text-center'>
+                            <a class='btn btn-success btn-sm' href='#' role='button' onclick='archRecord($row[id]);'>
+                                <span class='oi oi-circle-check'>  ARCHIVE</span>
+                            </a>                            
+                            <a class='btn btn-danger btn-sm' href='#' role='button' onclick='delRecord($row[id]);'>
+                                <span class='oi oi-circle-x'>  DELETE</span>
+                            </a>
+                            id -> $row[id]
+                            </td>                            
+                        </tr>
+                        ";
+                        $i++;
+                        $j++;
                     }
                     ?>
                 </tbody>

@@ -12,17 +12,17 @@ $res = mysqli_query(
     "SELECT 
     proc_trans.id as proc_id,
     proc_trans.item_details as details,
-    proc_trans.unit as unit
+    proc_trans.unit as unit,
+    proc_trans.work_stat as stat
     FROM proc_trans JOIN 
     items ON proc_trans.item_id = items.id 
-    WHERE items.item_type = 1
-    ORDER BY proc_id ASC
+    WHERE items.item_type = 1 AND proc_trans.work_stat <> 2   
     LIMIT 1"
 );
 
 if (mysqli_num_rows($res)) {
     $row = mysqli_fetch_array($res);
-    echo "$row[proc_id],$row[details],$row[unit];";
+    echo "$row[proc_id],$row[details],$row[unit],$row[stat];";
 }else{
     echo 0;
 }

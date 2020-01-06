@@ -88,7 +88,21 @@
             $('#table-jobs-current').load("../components/table-jobs-current/table-jobs-current.php #table-jobs-current", function () {                
                 recalCurrentJobs();
             });
-        }    
+        }  
+        function delRecord(record){
+            var state = confirm(`Are you sure for deleting record ${record}?`);
+            if(state == true){
+                alert(`you confirm to delete ${record}.`);
+                //ajax exe delete service 
+            }       
+        }  
+        function archRecord(record){            
+            var state = confirm(`Are you sure for archieving record ${record}?`);
+            if(state == true){
+                alert(`you confirm to archiev ${record}`);
+                //ajax exe move service
+            }
+        }
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="../assets/bootstrap/js/bootstrap.js" crossorigin="anonymous"></script>
