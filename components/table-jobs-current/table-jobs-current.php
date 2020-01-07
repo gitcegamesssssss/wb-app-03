@@ -43,14 +43,14 @@ $sql =
     <div id="table-jobs-current">
         <div class="container-fluid mt-2">
             <table class="table table-bordered table-hover table-responsive-sm" id="tag-table-jobs-current">
-                <thead class="bg-primary thead-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Order details (Menu Name + Modification)</th>
-                        <th>Cost per piece</th>
-                        <th>Quantities</th>
-                        <th>Cost total</th>
-                        <th>work status</th>
+                <thead class="table-primary">
+                    <tr class="text-center">
+                        <th style='width:4%'>#</th>
+                        <th style='width:56%'class="text-left">Order details (Menu Name + Modification)</th>
+                        <th style='width:10%'>Cost per piece</th>
+                        <th style='width:10%'>Quantities</th>
+                        <th style='width:10%'>Cost total</th>
+                        <th style='width:10%'>work status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,21 +59,49 @@ $sql =
                     $rem_order_id = 0;
                     $i = 1;
                     $j = 0;
+                    date_default_timezone_set("Asia/Bangkok");
+                    $current_time = date("H:i:s");
+                    
+                    $current_time = strtotime($current_time);
                     while ($row = mysqli_fetch_array($result)) {
                         $cur_order_id = $row['order_id'];
 
                         $date_time = explode(" ", $row['add_date']);
                         $cost_total = $row['abs_cost'] * $row['unit'];
-                        $arrStr_workstat = ["received", "progress", "done"];
+                        $arrStr_workstat = ["Received", "Progress", "Done"];
                         $arrColor = ['text-danger', 'text-warning', 'text-success'];
                         $workstat = $arrStr_workstat[$row['work_stat']];
                         $workStatColor = $arrColor[$row['work_stat']];
+                        
+                        $received_time = strtotime($date_time[1]);
+                        $waiting_time = $current_time - $received_time;
+                        $waiting_time = $waiting_time / 60 ;//in min
+                        $waiting_time = round($waiting_time, 0);
+                        $waiting_time_color = $arrColor[2];
+                        if($waiting_time >= 30)
+                            $waiting_time_color = $arrColor[0];
+                        else if($waiting_time >= 20)
+                            $waiting_time_color = $arrColor[1];
+                        else 
+                            $waiting_time_color = $arrColor[2]; 
                         if ($cur_order_id != $rem_order_id) {
                             $i = 1;
                             $delay = $i * 0.1;
                             echo "
-                            <tr>
-                                <td colspan='6'>Order ID : #$cur_order_id (Customer: $row[cus_name], Agent: $row[agent_name]) $date_time[1]
+                            <tr>                                
+                                <td colspan='6'>
+                                <span class='mx-4'>
+                                Order ID : 
+                                <span class='font-weight-bold'>#$cur_order_id</span> 
+                                
+                                (Customer: 
+                                <span class='font-weight-bold'>$row[cus_name]</span>
+                                , Agent: 
+                                <span class='font-weight-bold'>$row[agent_name]</span> 
+                                )
+                                </span>
+                                $date_time[1]
+                                <span class='$waiting_time_color'>(~$waiting_time min.)</span>
                                 <span class='float-right'>
                                     <a class='btn btn-primary btn-sm' href='./order-edit.php?order_id=$cur_order_id' role='button'>
                                         <span class='oi oi-pencil'></span>
@@ -84,26 +112,31 @@ $sql =
                             $rem_order_id = $cur_order_id;
                         }
                         echo "
-                        <tr onclick=$('#$row[id]').toggle()>
-                            <td>$i</td>
-                            <td>$row[item_details]</td>
+                        <tr class='text-center'onclick=$('#$row[id]').toggle()>
+                            <td class='table-primary'>$i</td>
+                            <td class='text-left'>$row[item_details]</td>
                             <td>$row[abs_cost]</td>
                             <td>$row[unit]</td>
                             <td>$cost_total</td>
-                            <td id='work-status-$j' class='font-weight-bold $workStatColor'>$workstat</td>
+                            <td id='work-status-$j' class='font-weight-bold $workStatColor text-center'>$workstat</td>
                         </tr>
                         ";
                         echo "
-                        <tr class='table-active' id='$row[id]' style='display:none;'>
-                            <td colspan='6' class='w3-animate-opacity text-center'>
-                            <a class='btn btn-success btn-sm' href='#' role='button' onclick='archRecord($row[id]);'>
-                                <span class='oi oi-circle-check'>  ARCHIVE</span>
-                            </a>                            
-                            <a class='btn btn-danger btn-sm' href='#' role='button' onclick='delRecord($row[id]);'>
-                                <span class='oi oi-circle-x'>  DELETE</span>
-                            </a>
+                        <tr id='$row[id]' style='display:none;'>
+                            <td colspan='5' class='w3-animate-opacity text-center table-primary'> 
+
+                            <button type='button' class='btn btn-success btn-sm' onclick='archRecord($row[id]);'>
+                            <span class='oi oi-circle-check'></span> ARCHIVE</button>
+
+                            <button type='button' class='btn btn-danger btn-sm' onclick='delRecord($row[id]);'>
+                            <span class='oi oi-circle-x'></span> DELETE</button>
                             id -> $row[id]
-                            </td>                            
+                            </td>  
+                            <td class='text-center'>set to 
+                            <button type='button' class='btn btn-outline-danger btn-sm' onclick='setStat2Rec($row[id]);'>R</button>
+                            <button type='button' class='btn btn-outline-warning btn-sm' onclick='setStat2Prog($row[id]);'>P</button>
+                            <button type='button' class='btn btn-outline-success btn-sm' onclick='setStat2Done($row[id]);'>D</button>
+                            </td>                          
                         </tr>
                         ";
                         $i++;

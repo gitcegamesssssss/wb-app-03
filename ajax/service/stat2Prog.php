@@ -5,8 +5,7 @@
     2 = done
 */
 error_reporting(0);
-if (isset($_GET['id'])) {    
-    echo ("set to PROG [id=$_GET[id]]");
+if (isset($_GET['id'])) {   
     $host = "localhost";
     $username = "root";
     $password = "";
@@ -19,6 +18,7 @@ if (isset($_GET['id'])) {
         $conn,
         "UPDATE proc_trans SET work_stat = 1 WHERE id = $_GET[id]"
     );
+    die("1");
 } else {
-    echo ("invalid param.");
+    die("0");
 }

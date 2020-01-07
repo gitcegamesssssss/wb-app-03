@@ -1,7 +1,6 @@
 <?php
 //error_reporting(0);
-if (isset($_GET['id'])) {
-    echo ("set to PROG [id=$_GET[id]]");
+if (isset($_GET['id'])) {    
     $host = "localhost";
     $username = "root";
     $password = "";
@@ -31,12 +30,13 @@ if (isset($_GET['id'])) {
                 $conn,
                 "DELETE FROM proc_trans WHERE id = $_GET[id]"
             );
+           die("1");
         } else { //in case error occur
-            echo ("error occur");
+            die("0");
         }
     }else{
-        echo "work_stat of this record is not DONE state";
+        die ("0");
     }
 } else {
-    echo ("invalid param.");
+    die("0");
 }

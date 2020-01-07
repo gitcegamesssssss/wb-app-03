@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <meta http-equiv="refresh" content="30">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>   
@@ -82,7 +82,7 @@
                     count++;
                 }
             }
-            document.getElementById("jobs-on-queue").innerHTML = count;
+            document.getElementById("jobs-on-queue").innerHTML = count/2;
         }
         function reloadTable() {
             $('#table-jobs-current').load("../components/table-jobs-current/table-jobs-current.php #table-jobs-current", function () {                
@@ -91,16 +91,85 @@
         }  
         function delRecord(record){
             var state = confirm(`Are you sure for deleting record ${record}?`);
-            if(state == true){
-                alert(`you confirm to delete ${record}.`);
+            if(state == true){                
                 //ajax exe delete service 
+                $.ajax({
+                    url: `/wb-app-03/ajax/service/deleteOrder.php?id=${record}`,
+                    type: 'GET',
+                    success: function(result) {
+                        console.log(`id ${record} has been deleted!`);
+                        reloadTable();                        
+                    }
+                });
             }       
         }  
         function archRecord(record){            
             var state = confirm(`Are you sure for archieving record ${record}?`);
-            if(state == true){
-                alert(`you confirm to archiev ${record}`);
+            if(state == true){                
                 //ajax exe move service
+                $.ajax({
+                    url: `/wb-app-03/ajax/service/moveProg2Done.php?id=${record}`,
+                    type: 'GET',
+                    success: function(result) {
+                        if(result == "1"){
+                            console.log(`id ${record} has been archieved!`);
+                            reloadTable();  
+                        }else{
+                            alert("Error: please make sure order work status is 'Done' before Archive it.");
+                        }                                              
+                    }
+                });
+            }
+        }
+        function setStat2Rec(record){
+            var state = confirm(`Are you sure for set this record to Received status?`);
+            if(state == true){
+                $.ajax({
+                    url: `/wb-app-03/ajax/service/stat2Rec.php?id=${record}`,
+                    type: 'GET',
+                    success: function(result) {
+                        if(result == "1"){
+                            console.log(`id ${record} has been set to Received`);
+                            reloadTable();  
+                        }else{
+                            alert(`something went wrong!`);
+                        }                                              
+                    }
+                });
+            }
+        }
+        function setStat2Prog(record){
+            var state = confirm(`Are you sure for set this record to Progress status?`);
+            if(state == true){
+                $.ajax({
+                    url: `/wb-app-03/ajax/service/stat2Prog.php?id=${record}`,
+                    type: 'GET',
+                    success: function(result) {
+                        if(result == "1"){
+                            console.log(`id ${record} has been set to Progress`);
+                            reloadTable();  
+                        }else{
+                            alert(`something went wrong!`);
+                        }                                              
+                    }
+                });
+            }
+        }
+        function setStat2Done(record){
+            var state = confirm(`Are you sure for set this record to Done status?`);
+            if(state == true){
+                $.ajax({
+                    url: `/wb-app-03/ajax/service/stat2Done.php?id=${record}`,
+                    type: 'GET',
+                    success: function(result) {
+                        if(result == "1"){
+                            console.log(`id ${record} has been set to Done`);
+                            reloadTable();  
+                        }else{
+                            alert(`something went wrong!`);
+                        }                                              
+                    }
+                });
             }
         }
     </script>
