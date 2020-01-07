@@ -28,12 +28,12 @@ $order_id = $order_id['cur_order_id'] + 1;
 </head>
 
 <body style="display:none">
-    <div class="w3-animate-left" id="navbar-main">
+    <div class="" id="navbar-main">
     </div>
     <div class="container-fluid m-3">
         <div class="row">
             <!-- input and controller -->
-            <div class="col-2 w3-animate-right">
+            <div class="col-2">
                 <div class="row">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -70,7 +70,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                 </div>
             </div>
             <!-- table -->
-            <div class="col-10 w3-animate-top">
+            <div class="col-10 ">
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-header">
@@ -121,7 +121,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                                 <span class="input-group-text">
                                                     <span class="oi oi-basket"></span>&nbsp;Beverage</span>
                                             </div>
-                                            <select class="form-control text-center" name="input-bev-id" id="input-bev-id">
+                                            <select class="form-control text-center" name="input-bev-id" id="input-bev-id" onfocus="this.value=''">
                                                 <?php
                                                 $result = mysqli_query($conn, "SELECT id, name, cost FROM items WHERE item_type = 1");
                                                 while ($row = mysqli_fetch_array($result)) {
@@ -140,7 +140,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                                 <span class="input-group-text">
                                                     <span class="oi oi-basket">
                                             </div>
-                                            <select class="form-control text-center" name="input-bev-type" id="input-bev-type">
+                                            <select class="form-control text-center" name="input-bev-type" id="input-bev-type" onfocus="this.value=''">
                                                 <option value="0">hot</option>
                                                 <option value="1">ice</option>
                                                 <option value="2">feppe</option>
@@ -149,7 +149,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                                 <span class="input-group-text">
                                                     <span class="oi oi-layers"></span>&nbsp;Quantities</span>
                                             </div>
-                                            <input type="number" class="form-control text-center" value="1" name="input-bev-quantities" id="input-bev-quantities">
+                                            <input type="number" min="0" class="form-control text-center" value="1" name="input-bev-quantities" id="input-bev-quantities" onfocus="this.value=''">
                                             <div class="input-group-prepend">
                                                 <button class="btn btn-outline-secondary" type="button" onclick="inc('input-bev-quantities');"><span class="oi oi-plus"></span></button>
                                             </div>
@@ -160,12 +160,12 @@ $order_id = $order_id['cur_order_id'] + 1;
                                     </div>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <div class="input-group-prepend d-block">
                                             <span class="input-group-text">
                                                 <span class="oi oi-beaker"></span>&nbsp;Modification</span>
                                         </div>
-                                        <select class="custom-select" name="input-bev-mods" id="input-bev-mods" multiple>
+                                        <select class="custom-select" name="input-bev-mods" id="input-bev-mods" size="10" onfocus="this.value=''" multiple>
                                             <?php
                                             $result = mysqli_query($conn, "SELECT id, name, cost FROM mod_bev");
                                             while ($row = mysqli_fetch_array($result)) {
@@ -173,14 +173,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                             }
                                             ?>
                                         </select>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="container-fluid">
-                                            <button class="btn btn-primary"><span class="oi oi-list" onclick="updateBevProperties()"></span>&nbsp;&nbsp;View details</button>
-                                            <div id="list-of-details">
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
@@ -188,13 +181,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                         <div class="modal-footer">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-10">
-                                        <span class="float-right">
-                                            per piece : <span class="font-weight-bold text-primary" name="mon-bev-price-piece" id="mon-bev-price-piece">x</span>
-                                            &nbsp;฿
-                                            totals : <span class="font-weight-bold text-primary" name="mon-bev-price-total" id="mon-bev-price-total">x</span>
-                                            &nbsp;฿
-                                        </span>
+                                    <div class="col-10">                                        
                                     </div>
                                     <div class="col-2"><button type="button" class="btn btn-primary btn-block" onclick="addBev();">add</button></div>
                                 </div>
@@ -205,7 +192,7 @@ $order_id = $order_id['cur_order_id'] + 1;
             </div>
             <!-- modal-add-dish -->
             <div class="modal fade" id="modal-add-dish">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
@@ -222,7 +209,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                                 <span class="input-group-text">
                                                     <span class="oi oi-basket"></span>&nbsp;Main Dish</span>
                                             </div>
-                                            <select class="form-control text-center" name="input-dish-id" id="input-dish-id">
+                                            <select class="form-control text-center" name="input-dish-id" id="input-dish-id" onfocus="this.value=''">
                                                 <?php
                                                 $result = mysqli_query($conn, "SELECT id, name, cost FROM items WHERE item_type = 2");
                                                 while ($row = mysqli_fetch_array($result)) {
@@ -239,7 +226,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                             <span class="input-group-text">
                                                 <span class="oi oi-beaker"></span>&nbsp;Modification</span>
                                         </div>
-                                        <select class="custom-select" name="input-dish-mods" id="input-dish-mods" size="10" multiple>
+                                        <select class="custom-select" name="input-dish-mods" id="input-dish-mods" size="10" onfocus="this.value=''" multiple>
                                             <?php
                                             $result = mysqli_query($conn, "SELECT id, name, cost FROM mod_dish");
                                             while ($row = mysqli_fetch_array($result)) {
@@ -256,7 +243,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                                 <span class="input-group-text">
                                                     <span class="oi oi-layers"></span>&nbsp;Quantities</span>
                                             </div>
-                                            <input type="number" class="form-control text-center" value="1" name="input-dish-quantities" id="input-dish-quantities">
+                                            <input type="number" min="0" class="form-control text-center" value="1" name="input-dish-quantities" id="input-dish-quantities">
                                             <div class="input-group-prepend">
                                                 <button class="btn btn-outline-secondary" type="button" onclick="inc('input-dish-quantities');"><span class="oi oi-plus"></span></button>
                                             </div>
@@ -272,13 +259,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                         <div class="modal-footer">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-10">
-                                        <span class="float-right">
-                                            per piece : <span class="font-weight-bold text-primary" name="mon-bev-price-piece" id="mon-bev-price-piece">x</span>
-                                            &nbsp;฿
-                                            totals : <span class="font-weight-bold text-primary" name="mon-bev-price-total" id="mon-bev-price-total">x</span>
-                                            &nbsp;฿
-                                        </span>
+                                    <div class="col-10">                                       
                                     </div>
                                     <div class="col-2"><button type="button" class="btn btn-primary btn-block" onclick="addDish()">add</button></div>
                                 </div>
@@ -289,7 +270,7 @@ $order_id = $order_id['cur_order_id'] + 1;
             </div>
             <!-- modal-add-snack -->
             <div class="modal fade" id="modal-add-snack">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
@@ -306,7 +287,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                                 <span class="input-group-text">
                                                     <span class="oi oi-basket"></span>&nbsp;Snack</span>
                                             </div>
-                                            <select class="form-control text-center" name="input-snack-id" id="input-snack-id">
+                                            <select class="form-control text-center" name="input-snack-id" id="input-snack-id" onfocus="this.value=''">
                                                 <?php
                                                 $result = mysqli_query($conn, "SELECT id, name, cost FROM items WHERE item_type = 3");
                                                 while ($row = mysqli_fetch_array($result)) {
@@ -324,7 +305,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                                 <span class="input-group-text">
                                                     <span class="oi oi-layers"></span>&nbsp;Quantities</span>
                                             </div>
-                                            <input type="number" class="form-control text-center" value="1" name="input-snack-quantities" id="input-snack-quantities">
+                                            <input type="number" min="0" class="form-control text-center" value="1" name="input-snack-quantities" id="input-snack-quantities">
                                             <div class="input-group-prepend">
                                                 <button class="btn btn-outline-secondary" type="button" onclick="inc('input-snack-quantities');"><span class="oi oi-plus"></span></button>
                                             </div>
@@ -371,14 +352,14 @@ $order_id = $order_id['cur_order_id'] + 1;
                                 </div>
                                 <div id="loader-complete" style="display:none;">
                                     <span>
-                                        <h3 class="text-success text-center w3-animate-zoom">
+                                        <h3 class="text-success text-center ">
                                             <span class="oi oi-check"></span> Successful
                                         </h3>
                                     </span>
                                 </div>
                                 <div id="loader-failed" style="display:none;">
                                     <span>
-                                        <h3 class="text-danger text-center w3-animate-zoom">
+                                        <h3 class="text-danger text-center ">
                                             <span class="oi oi-circle-x"></span> failed
                                         </h3>
                                     </span>
@@ -445,7 +426,7 @@ $order_id = $order_id['cur_order_id'] + 1;
             var cell3 = row.insertCell(2);
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
-            row.classList.add("w3-animate-zoom");
+            row.classList.add("w3-animate-top");
             cell1.innerHTML = tmpBevProp.details;
             cell1.classList.add("text-left");
             cell2.innerHTML = tmpBevProp.cost_per_piece;

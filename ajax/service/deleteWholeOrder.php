@@ -1,12 +1,8 @@
 <?php
-/*
-    use for set workstatus to "0"
-    0 = rec
-    1 = prog
-    2 = done
-*/
+/* use for delete specific order (all record in order) */ 
 error_reporting(0);
-if (isset($_GET['id'])) {   
+if (isset($_GET['id'])) {
+    echo ("id valid! $_GET[id]");
     $host = "localhost";
     $username = "root";
     $password = "";
@@ -17,10 +13,8 @@ if (isset($_GET['id'])) {
 
     $res = mysqli_query(
         $conn,
-        "UPDATE proc_trans SET work_stat = 0 WHERE id = $_GET[id]"
+        "DELETE FROM proc_trans WHERE order_id = $_GET[id]"
     );
-
-    die("1");
 } else {
-    die("0");
+    echo ("invalid param.");
 }

@@ -102,10 +102,10 @@ $sql =
                                 </span>
                                 $date_time[1]
                                 <span class='$waiting_time_color'>(~$waiting_time min.)</span>
-                                <span class='float-right'>
-                                    <a class='btn btn-primary btn-sm' href='./order-edit.php?order_id=$cur_order_id' role='button'>
-                                        <span class='oi oi-pencil'></span>
-                                    </a>
+                                <span class='float-right'>                                    
+                                    <button type='button' class='btn btn-danger btn-sm' onclick='delOrder($cur_order_id);'>
+                                        <span class='oi oi-trash'></span>
+                                    </button>
                                 </span>
                                 </td>
                             </tr>";

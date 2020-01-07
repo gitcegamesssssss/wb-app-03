@@ -1,4 +1,5 @@
 <?php
+/* use for move record from proc-table to done-table*/ 
 //error_reporting(0);
 if (isset($_GET['id'])) {    
     $host = "localhost";

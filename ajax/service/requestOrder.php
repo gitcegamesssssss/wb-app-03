@@ -1,4 +1,5 @@
 <?php
+/* use for serve bev-order */ 
 $host = "localhost";
 $username = "root";
 $password = "";

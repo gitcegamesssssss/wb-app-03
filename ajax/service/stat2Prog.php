@@ -1,5 +1,6 @@
 <?php
 /*
+    use for set workstatus to "1"
     0 = rec
     1 = prog
     2 = done

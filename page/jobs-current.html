@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="refresh" content="30">
+    <meta http-equiv="refresh" content="60">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>   
@@ -89,6 +89,20 @@
                 recalCurrentJobs();
             });
         }  
+        function delOrder(order){
+            var state = confirm(`Are you sure for deleting order #${order}?`);
+            if(state == true){
+                //ajax exe delete order service 
+                $.ajax({
+                    url: `/wb-app-03/ajax/service/deleteWholeOrder.php?id=${order}`,
+                    type: 'GET',
+                    success: function(result) {
+                        console.log(`order #${order} has been deleted!`);
+                        reloadTable();                        
+                    }
+                });
+            }
+        }
         function delRecord(record){
             var state = confirm(`Are you sure for deleting record ${record}?`);
             if(state == true){                

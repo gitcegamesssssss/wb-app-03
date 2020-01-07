@@ -1,4 +1,5 @@
 <?php
+/* use for delete specific record */ 
 error_reporting(0);
 if (isset($_GET['id'])) {
     echo ("id valid! $_GET[id]");
