@@ -14,6 +14,11 @@ $order_id = $order_id['cur_order_id'] + 1;
 <html lang="en">
 
 <head>
+    <style>
+        input[type="text"]:disabled {
+            background: white;
+        }
+    </style>
     <title>+Order create</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -49,10 +54,10 @@ $order_id = $order_id['cur_order_id'] + 1;
                             <span class="input-group-text">
                                 <span class="oi oi-people"></span>&nbsp;Customer</span>
                         </div>
-                        <input type="text" class="form-control text-center" id="input-customer-show" value="Guest">
-                        <input type="hidden" class="form-control text-center" id="input-customer-id" value="1">
+                        <input type="text" class="form-control text-center" id="input-customer-show" value="GUEST (0 pt.)" disabled>
+                        <input type="hidden" class="form-control text-center" id="input-customer-id" value="1" disabled>
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button"><span class="oi oi-magnifying-glass"></span></button>
+                            <button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#modal-scan-user"><span class="oi oi-magnifying-glass"></span></button>
                         </div>
                     </div>
                 </div>
@@ -75,8 +80,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                     <div class="card">
                         <div class="card-header">
                             Current Orders ( Total Order:
-                            <span class="font-weight-bold" id="total-order">0</span> ea. , Total Cost:
-                            <span class="font-weight-bold text-danger" id="total-cost">0</span> <span class="font-weight-bold text-danger">฿</span> )
+                            <span class="font-weight-bold" id="total-order">0</span> ea. )
                             <button type="button" class="btn btn-danger float-right" onclick="clearTable()">
                                 <span class="oi oi-ban mr-1"></span>Clear</button>
                         </div>
@@ -96,8 +100,35 @@ $order_id = $order_id['cur_order_id'] + 1;
                             </table>
                         </div>
                         <div class="card-footer">
+                            <div class="input-group col-2 float-left">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <span class="oi oi-inbox"></span>&nbsp;Cost</span>
+                                </div>
+                                <input type="number" min="0" class="form-control text-center" id="total-cost" value="0" disabled>
+                            </div>
+                            <div class="input-group col-1 float-left" style="display:none;" id="discount-btn" onclick="useDiscount();">
+                                <button type="button" class="btn btn-warning btn-sm mt-1">
+                                    Discount <span class="oi oi-bolt"></span>
+                                </button>
+                            </div>
+                            <div class="input-group col-2 float-left">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <span class="oi oi-dollar mb-1"></span>&nbsp;Cash</span>
+                                </div>
+                                <input type="number" min="0" class="form-control text-center" id="cash" value="0" oninput="calBalance();">
+                            </div>
+                            <div class="input-group col-2 float-left">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <span class="oi oi-loop"></span>&nbsp;Balance</span>
+                                </div>
+                                <input type="number" min="0" class="form-control text-center" id="balance" value="0" disabled>
+                            </div>
                             <button type="button" class="btn btn-success float-right" onclick="exeSQL(createSQL());">
-                                confirm<span class="oi oi-task ml-1"></span></button>                            
+                                confirm<span class="oi oi-task ml-1"></span></button>
+
                         </div>
                     </div>
                 </div>
@@ -173,7 +204,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                                             }
                                             ?>
                                         </select>
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +212,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                         <div class="modal-footer">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-10">                                        
+                                    <div class="col-10">
                                     </div>
                                     <div class="col-2"><button type="button" class="btn btn-primary btn-block" onclick="addBev();">add</button></div>
                                 </div>
@@ -259,7 +290,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                         <div class="modal-footer">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-10">                                       
+                                    <div class="col-10">
                                     </div>
                                     <div class="col-2"><button type="button" class="btn btn-primary btn-block" onclick="addDish()">add</button></div>
                                 </div>
@@ -322,12 +353,6 @@ $order_id = $order_id['cur_order_id'] + 1;
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-10">
-                                        <span class="float-right">
-                                            per piece : <span class="font-weight-bold text-primary" name="mon-bev-price-piece" id="mon-bev-price-piece">x</span>
-                                            &nbsp;฿
-                                            totals : <span class="font-weight-bold text-primary" name="mon-bev-price-total" id="mon-bev-price-total">x</span>
-                                            &nbsp;฿
-                                        </span>
                                     </div>
                                     <div class="col-2"><button type="button" class="btn btn-primary btn-block" onclick="addSnack()">add</button></div>
                                 </div>
@@ -369,14 +394,70 @@ $order_id = $order_id['cur_order_id'] + 1;
                     </div>
                 </div>
             </div>
+            <!-- modal-scan-user -->
+            <div class="modal fade" id="modal-scan-user">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">find user</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="form-group">
+                                    <label for=""></label>
+                                    <input type="tel" class="form-control" name="" id="" aria-describedby="helpId" placeholder="type phone number . . ." oninput="userScan(this.value)">
+                                </div>
+                                <div id="user-show">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modal-summary -->
+            <div class="modal fade" id="modal-summary">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">summary</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div id="show-summary">
+                                    summary field.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-9">
+                                    </div>
+                                    <div class="col-3"><button type="button" class="btn btn-primary btn-block" onclick="">confirm</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script>
         checkToken(sessionStorage.wbUsr, sessionStorage.wbToken);
-        
+
         $('#navbar-main').load("../components/navbar-main/navbar-main.html #navbar-main");
         $.getScript("../components/navbar-main/navbar-main.js");
 
+        //user data
+        var userInfo;
+        var discountState = 0;
         //added items (items storage & items status)
         var arrItems = [];
         var totalOrders = 0;
@@ -385,7 +466,7 @@ $order_id = $order_id['cur_order_id'] + 1;
         var tmpBevProp;
         var tmpDishProp;
         var tmpSnackProp;
-        //==================================================================================   
+        //==================================================================================     
         function exeSQL(sql) { //ajax function  
             if (sql == null) {
                 alert("list empty!");
@@ -406,7 +487,10 @@ $order_id = $order_id['cur_order_id'] + 1;
                         } else {
                             document.getElementById("loader-complete").style.display = "initial";
                             clearTable();
-                            $.ajax({url:'/wb-app-03/ajax/service/signal.php', type: 'GET'});
+                            $.ajax({
+                                url: '/wb-app-03/ajax/service/signal.php',
+                                type: 'GET'
+                            });
                             window.location.replace("/wb-app-03/page/jobs-current.html");
                         }
                     }
@@ -447,10 +531,12 @@ $order_id = $order_id['cur_order_id'] + 1;
                 arrItems.splice(rowId - 1, 1);
                 updateTotalCost();
                 updateTotalOrders();
+                calBalance();
             }
             cell5.appendChild(delBtn);
             updateTotalCost();
             updateTotalOrders();
+            calBalance();
         }
 
         function addDish() {
@@ -486,10 +572,12 @@ $order_id = $order_id['cur_order_id'] + 1;
                 arrItems.splice(rowId - 1, 1);
                 updateTotalCost();
                 updateTotalOrders();
+                calBalance();
             }
             cell5.appendChild(delBtn);
             updateTotalCost();
             updateTotalOrders();
+            calBalance();
         }
 
         function addSnack() {
@@ -525,10 +613,12 @@ $order_id = $order_id['cur_order_id'] + 1;
                 arrItems.splice(rowId - 1, 1);
                 updateTotalCost();
                 updateTotalOrders();
+                calBalance();
             }
             cell5.appendChild(delBtn);
             updateTotalCost();
             updateTotalOrders();
+            calBalance();
         }
 
         function updateBevProperties() {
@@ -625,6 +715,7 @@ $order_id = $order_id['cur_order_id'] + 1;
             document.getElementById("table-items").replaceWith(new_body);
             updateTotalCost();
             updateTotalOrders();
+            calBalance();
         }
 
         function inc(id) {
@@ -678,7 +769,69 @@ $order_id = $order_id['cur_order_id'] + 1;
         }
 
         function updateTotalCost() {
-            document.getElementById("total-cost").innerText = totalCost;
+            document.getElementById("total-cost").value = totalCost;
+        }
+
+        function showSummary() {
+            var el_summary = document.getElementById("show-summary");
+            el_summary.innerHTML = totalCost;
+        }
+
+        function userScan(value) {
+            var tmpJSON = "";
+            //document.getElementById("user-show").innerHTML = value;
+            $.ajax({
+                url: `/wb-app-03/ajax/userScan.php?str=${value}`,
+                type: 'GET',
+                success: function(result) {
+                    var tmp_el_user_show = document.getElementById("user-show");
+                    tmp_el_user_show.innerHTML = "";
+                    if (result != "") {
+                        tmpJSON = JSON.parse(result);
+                        console.log(tmpJSON.length);
+                        tmpJSON.forEach(el => {
+                            //console.log(el["name"]);                                                     
+                            var tmp_el_a = document.createElement("A");
+                            tmp_el_a.href = "#";
+                            tmp_el_a.addEventListener("click",
+                                function() {
+                                    document.getElementById("input-customer-show").value = `${el["name"]} (${el["point"]} pt.)`;
+                                    document.getElementById("input-customer-id").value = el["id"];
+                                    $('#modal-scan-user').modal('hide');
+                                    userInfo = el;
+                                    if (el["point"] >= 10) {
+                                        document.getElementById("discount-btn").style.display = "";
+                                    } else {
+                                        document.getElementById("discount-btn").style.display = "none";
+                                    }
+                                });
+                            tmp_el_a.innerHTML = `name: ${el["name"]} tel: ${el["tel"]}`;
+                            tmp_el_user_show.appendChild(tmp_el_a);
+                            tmp_el_user_show.appendChild(document.createElement("br"));
+                        });
+                    }
+                }
+            });
+        }
+
+        function calBalance() {
+            document.getElementById("balance").value = document.getElementById("cash").value - totalCost;
+        }
+
+        function useDiscount() {
+            if (discountState == 0) {
+                discountState = 1;
+                totalCost -= 40;
+                updateTotalCost();
+                calBalance();
+                $("#total-cost").addClass("w3-animate-zoom border border-warning text-warning font-weight-bold");
+            } else if (discountState == 1) {
+                discountState = 0;
+                totalCost += 40;
+                updateTotalCost();
+                calBalance();
+                $("#total-cost").removeClass("w3-animate-zoom border border-warning text-warning font-weight-bold");
+            }
         }
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
