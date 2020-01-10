@@ -20,9 +20,9 @@ if (isset($_GET['id'])) {
     if ($row_prog['work_stat'] == 2) {
         $res_move = mysqli_query(
             $conn,
-            "INSERT INTO done_trans (order_id, cus_id, item_id, mod_item, abs_cost, unit, agent_id, add_date) 
+            "INSERT INTO done_trans (order_id, cus_id, item_id, mod_item, abs_cost, unit, agent_id, add_date, item_details) 
             VALUES ($row_prog[order_id], $row_prog[cus_id], $row_prog[item_id], '$row_prog[mod_item]', $row_prog[abs_cost],
-            $row_prog[unit], $row_prog[agent_id], '$row_prog[add_date]')"
+            $row_prog[unit], $row_prog[agent_id], '$row_prog[add_date]', '$row_prog[item_details]')"
         );
 
         if (mysqli_error($conn) == '') { //mysql_errno return '' when NO error
