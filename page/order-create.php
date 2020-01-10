@@ -454,7 +454,9 @@ $order_id = $order_id['cur_order_id'] + 1;
 
         $('#navbar-main').load("../components/navbar-main/navbar-main.html #navbar-main");
         $.getScript("../components/navbar-main/navbar-main.js");
-
+        
+        //Order data
+        var orderId = document.getElementById("input-order-id").value;
         //user data
         var userInfo;
         var discountState = 0;
@@ -475,6 +477,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                 document.getElementById("loader-failed").style.display = "none";
                 document.getElementById("loader-loading").style.display = "initial";
                 $("#modal-adding-loader").modal('show');
+                confirmDiscount();
                 $.ajax({
                     url: `../ajax/addItems.php?
                 sql=${sql}&cur_order_id=${document.getElementById("input-order-id").value}`,
@@ -831,6 +834,19 @@ $order_id = $order_id['cur_order_id'] + 1;
                 updateTotalCost();
                 calBalance();
                 $("#total-cost").removeClass("w3-animate-zoom border border-warning text-warning font-weight-bold");
+            }
+        }
+
+        function confirmDiscount() {
+            if (discountState == 1) {
+                alert("discount complete");
+                $.ajax({
+                    url: `/wb-app-03/ajax/service/useDiscount.php?customerId=${userInfo.id}&orderId=${orderId}`,
+                    type: 'GET',
+                    success: function(result) {
+                        console.log(result);                        
+                    }
+                });
             }
         }
     </script>

@@ -8,7 +8,8 @@ $sql =
     'SELECT proc_trans.id, 
     proc_trans.order_id, 
     proc_trans.cus_id, 
-    customers.name as cus_name, 
+    customers.name as cus_name,
+    customers.discount, 
     proc_trans.item_id, 
     items.name as item_name, 
     proc_trans.abs_cost, 
@@ -46,7 +47,7 @@ $sql =
                 <thead class="table-primary">
                     <tr class="text-center">
                         <th style='width:4%'>#</th>
-                        <th style='width:56%'class="text-left">Order details (Menu Name + Modification)</th>
+                        <th style='width:56%' class="text-left">Order details (Menu Name + Modification)</th>
                         <th style='width:10%'>Cost per piece</th>
                         <th style='width:10%'>Quantities</th>
                         <th style='width:10%'>Cost total</th>
@@ -61,7 +62,7 @@ $sql =
                     $j = 0;
                     date_default_timezone_set("Asia/Bangkok");
                     $current_time = date("H:i:s");
-                    
+
                     $current_time = strtotime($current_time);
                     while ($row = mysqli_fetch_array($result)) {
                         $cur_order_id = $row['order_id'];
@@ -72,43 +73,127 @@ $sql =
                         $arrColor = ['text-danger', 'text-warning', 'text-success'];
                         $workstat = $arrStr_workstat[$row['work_stat']];
                         $workStatColor = $arrColor[$row['work_stat']];
-                        
+
                         $received_time = strtotime($date_time[1]);
                         $waiting_time = $current_time - $received_time;
-                        $waiting_time = $waiting_time / 60 ;//in min
+                        $waiting_time = $waiting_time / 60; //in min
                         $waiting_time = round($waiting_time, 0);
                         $waiting_time_color = $arrColor[2];
-                        if($waiting_time >= 30)
+                        if ($waiting_time >= 30)
                             $waiting_time_color = $arrColor[0];
-                        else if($waiting_time >= 20)
+                        else if ($waiting_time >= 20)
                             $waiting_time_color = $arrColor[1];
-                        else 
-                            $waiting_time_color = $arrColor[2]; 
+                        else
+                            $waiting_time_color = $arrColor[2];
                         if ($cur_order_id != $rem_order_id) {
                             $i = 1;
                             $delay = $i * 0.1;
-                            echo "
-                            <tr>                                
-                                <td colspan='6'>
-                                <span class='mx-4'>
-                                Order ID : 
-                                <span class='font-weight-bold'>#$cur_order_id</span> 
-                                
-                                (Customer: 
-                                <span class='font-weight-bold'>$row[cus_name]</span>
-                                , Agent: 
-                                <span class='font-weight-bold'>$row[agent_name]</span> 
-                                )
-                                </span>
-                                $date_time[1]
-                                <span class='$waiting_time_color'>(~$waiting_time min.)</span>
-                                <span class='float-right'>                                    
-                                    <button type='button' class='btn btn-danger btn-sm' onclick='delOrder($cur_order_id);'>
-                                        <span class='oi oi-trash'></span>
-                                    </button>
-                                </span>
-                                </td>
-                            </tr>";
+                            $arrDiscount = explode(',', $row['discount']);
+                            $showDiscountState = 0;
+                            
+                            //cal discount state
+                            if($arrDiscount[0] == "0"){
+                                $showDiscountState = 0;
+                            }else{
+                                foreach ($arrDiscount as $tmp) {
+                                    if($tmp == $cur_order_id)
+                                        $showDiscountState = 1;
+                                }
+                            }
+
+                            if($showDiscountState == 1){
+                                //record show discount  
+                                echo "
+                                <tr>                                
+                                    <td colspan='6'>
+                                    <span class='mx-4'>
+                                    Order ID : 
+                                    <span class='font-weight-bold'>#$cur_order_id</span> <span class='badge badge-warning'>discounted</span>   
+                                    (Customer: 
+                                    <span class='font-weight-bold'>$row[cus_name]</span>
+                                    , Agent: 
+                                    <span class='font-weight-bold'>$row[agent_name]</span> 
+                                    )
+                                    </span>                                    
+                                    $date_time[1]
+                                    <span class='$waiting_time_color'>(~$waiting_time min.)</span>                                                                                                    
+                                    <span class='float-right'>                                                                       
+                                        <button type='button' class='btn btn-danger btn-sm' onclick='delOrder($cur_order_id);'>
+                                            <span class='oi oi-trash'></span>
+                                        </button>
+                                    </span>
+                                    </td>
+                                </tr>";
+                            }else{
+                                //record not show discount
+                                echo "
+                                <tr>                                
+                                    <td colspan='6'>
+                                    <span class='mx-4'>
+                                    Order ID : 
+                                    <span class='font-weight-bold'>#$cur_order_id</span>                                     
+                                    (Customer: 
+                                    <span class='font-weight-bold'>$row[cus_name]</span>
+                                    , Agent: 
+                                    <span class='font-weight-bold'>$row[agent_name]</span> 
+                                    )
+                                    </span>
+                                    $date_time[1]
+                                    <span class='$waiting_time_color'>(~$waiting_time min.)</span>                                
+                                    <span class='float-right'>                                    
+                                        <button type='button' class='btn btn-danger btn-sm' onclick='delOrder($cur_order_id);'>
+                                            <span class='oi oi-trash'></span>
+                                        </button>
+                                    </span>
+                                    </td>
+                                </tr>";
+                            }
+
+                            /*if ($row['discount'] == $cur_order_id) {
+                                echo "
+                                <tr>                                
+                                    <td colspan='6'>
+                                    <span class='mx-4'>
+                                    Order ID : 
+                                    <span class='font-weight-bold'>#$cur_order_id</span> <span class='badge badge-warning'>discounted</span>   
+                                    (Customer: 
+                                    <span class='font-weight-bold'>$row[cus_name]</span>
+                                    , Agent: 
+                                    <span class='font-weight-bold'>$row[agent_name]</span> 
+                                    )
+                                    </span>                                    
+                                    $date_time[1]
+                                    <span class='$waiting_time_color'>(~$waiting_time min.)</span>                                                                                                    
+                                    <span class='float-right'>                                                                       
+                                        <button type='button' class='btn btn-danger btn-sm' onclick='delOrder($cur_order_id);'>
+                                            <span class='oi oi-trash'></span>
+                                        </button>
+                                    </span>
+                                    </td>
+                                </tr>";
+                            }else{
+                                echo "
+                                <tr>                                
+                                    <td colspan='6'>
+                                    <span class='mx-4'>
+                                    Order ID : 
+                                    <span class='font-weight-bold'>#$cur_order_id</span>                                     
+                                    (Customer: 
+                                    <span class='font-weight-bold'>$row[cus_name]</span>
+                                    , Agent: 
+                                    <span class='font-weight-bold'>$row[agent_name]</span> 
+                                    )
+                                    </span>
+                                    $date_time[1]
+                                    <span class='$waiting_time_color'>(~$waiting_time min.)</span>                                
+                                    <span class='float-right'>                                    
+                                        <button type='button' class='btn btn-danger btn-sm' onclick='delOrder($cur_order_id);'>
+                                            <span class='oi oi-trash'></span>
+                                        </button>
+                                    </span>
+                                    </td>
+                                </tr>";
+                            }*/
                             $rem_order_id = $cur_order_id;
                         }
                         echo "
