@@ -36,7 +36,7 @@ if (isset($_GET['date'])) {
 
     if(isset($_GET['minTime']) && isset($_GET['maxTime'])){
         //date-time filtering
-        $sql .= "BETWEEN '$_GET[date] $_GET[minTime]' AND '$_GET[date] $_GET[maxTime]'";
+        $sql .= "BETWEEN '$_GET[date] $_GET[minTime]:00' AND '$_GET[date] $_GET[maxTime]:00'";
     }else{
         //only date filtering
         $sql .= "LIKE '$_GET[date]%'";

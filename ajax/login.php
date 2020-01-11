@@ -20,7 +20,7 @@ if($conn->connect_error){
     if(strtoupper(hash('sha256', $loginPwd)) == $row['hash']){
         //password OK -> generate token
         $token = strtoupper(hash('sha256', $loginPwd.rand(0,99)));
-        mysqli_query($conn, "UPDATE agent SET token = '$token' WHERE $row[id]");        
+        mysqli_query($conn, "UPDATE agent SET token = '$token' WHERE id = $row[id]");        
         die("$token $row[id]");        
     }        
     else 
