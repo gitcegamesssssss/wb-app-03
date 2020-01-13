@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2019 at 05:08 PM
+-- Generation Time: Jan 13, 2020 at 03:56 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.2.16
 
@@ -45,8 +45,8 @@ CREATE TABLE `agent` (
 --
 
 INSERT INTO `agent` (`id`, `name`, `username`, `hash`, `tel`, `email`, `agent_id`, `mod_date`, `token`) VALUES
-(1, 'root', 'root', '5C3CD6BECF2A8B5EDC93BDADFF5FE62B873BB5AE18FBDBC08A03057348CCE3FD', '0935260404', 'tanapon.se.game@gmail.com', NULL, '2019-08-15 14:41:37', '46E2A0C30D91D8B738A94703564AAC8DB20B0CD682440979980E676568368EA4'),
-(2, 'Thanapon Puechnukul', 'cegamessssss', '1675BC07C25C01D629B2D37FEE341B40E12958A0061E205FB34519499D7C92C8', '0817682626', 'tanapon.game@gmail.com', 1, '2019-10-28 18:11:15', '46E2A0C30D91D8B738A94703564AAC8DB20B0CD682440979980E676568368EA4');
+(1, 'root', 'root', '5C3CD6BECF2A8B5EDC93BDADFF5FE62B873BB5AE18FBDBC08A03057348CCE3FD', '0935260404', 'tanapon.se.game@gmail.com', NULL, '2019-08-15 14:41:37', '0FC655DFF9136D0D996F067F349BD0C71D3BBE4D7531D8A71E9ADEA4A480913F'),
+(2, 'Thanapon Puechnukul', 'cegamessssss', '1675BC07C25C01D629B2D37FEE341B40E12958A0061E205FB34519499D7C92C8', '0817682626', 'tanapon.game@gmail.com', 1, '2019-10-28 18:11:15', '4D4DA8EC25D2FF4A61FA194CCA62305944514EA451811AA6C34016C4270E3C1C');
 
 -- --------------------------------------------------------
 
@@ -61,15 +61,18 @@ CREATE TABLE `customers` (
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `point` int(11) DEFAULT '0',
   `agent_id` int(11) NOT NULL,
-  `mod_date` datetime DEFAULT CURRENT_TIMESTAMP
+  `mod_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `discount` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`id`, `name`, `tel`, `email`, `point`, `agent_id`, `mod_date`) VALUES
-(1, 'GUEST', '0935260404', NULL, NULL, 1, '2019-08-15 14:48:57');
+INSERT INTO `customers` (`id`, `name`, `tel`, `email`, `point`, `agent_id`, `mod_date`, `discount`) VALUES
+(1, 'GUEST', '0935260404', NULL, 0, 1, '2019-08-15 14:48:57', '0'),
+(3, 'Game', '0812601037', NULL, 10, 1, '2020-01-08 11:21:36', '0'),
+(4, 'Kaew', '0854599693', NULL, 0, 1, '2020-01-08 11:22:25', '0');
 
 -- --------------------------------------------------------
 
@@ -86,8 +89,45 @@ CREATE TABLE `done_trans` (
   `abs_cost` float NOT NULL,
   `unit` int(11) DEFAULT '1',
   `agent_id` int(11) NOT NULL,
-  `add_date` datetime DEFAULT NULL
+  `add_date` datetime DEFAULT NULL,
+  `item_details` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `done_trans`
+--
+
+INSERT INTO `done_trans` (`id`, `order_id`, `cus_id`, `item_id`, `mod_item`, `abs_cost`, `unit`, `agent_id`, `add_date`, `item_details`) VALUES
+(32, 143, 3, 1, '', 30, 1, 1, '2020-01-09 12:09:36', 'bev_01(hot)'),
+(33, 144, 3, 1, '', 30, 1, 1, '2020-01-10 23:09:36', 'bev_01(hot)'),
+(34, 146, 3, 6, '1,3', 50, 2, 1, '2020-01-10 12:59:25', 'mocha(ice)/ vanilla syrup/ less sweet'),
+(35, 146, 3, 3, '', 45, 1, 1, '2020-01-10 12:59:25', 'dish_01'),
+(36, 147, 1, 4, '', 25, 1, 1, '2020-01-10 16:07:27', 'snack_01'),
+(37, 148, 1, 1, '', 30, 1, 1, '2020-01-11 10:28:15', 'bev_01(hot)'),
+(38, 148, 1, 1, '', 30, 1, 1, '2020-01-11 10:28:15', 'bev_01(hot)'),
+(39, 148, 1, 3, '', 45, 1, 1, '2020-01-11 10:28:15', 'dish_01'),
+(40, 149, 1, 1, '', 30, 1, 1, '2020-01-11 10:29:30', 'bev_01(hot)'),
+(41, 150, 1, 3, '', 45, 1, 1, '2020-01-11 10:29:42', 'dish_01'),
+(42, 150, 1, 6, '1,3', 50, 2, 1, '2020-01-11 10:29:42', 'mocha(ice)/ vanilla syrup/ less sweet'),
+(43, 151, 1, 4, '', 25, 1, 1, '2020-01-11 10:30:03', 'snack_01'),
+(44, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(45, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(46, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(47, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(48, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(49, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(50, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(51, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(52, 152, 1, 1, '', 30, 1, 1, '2020-01-11 12:37:03', 'bev_01(hot)'),
+(53, 153, 3, 1, '', 30, 1, 2, '2020-01-11 16:58:54', 'bev_01(hot)'),
+(54, 154, 4, 3, '', 45, 1, 2, '2020-01-11 16:59:10', 'dish_01'),
+(55, 154, 4, 3, '', 45, 1, 2, '2020-01-11 16:59:10', 'dish_01'),
+(56, 155, 1, 1, '', 30, 1, 1, '2020-01-13 09:40:31', 'bev_01(hot)'),
+(57, 155, 1, 3, '', 45, 1, 1, '2020-01-13 09:40:31', 'dish_01'),
+(58, 155, 1, 4, '', 25, 2, 1, '2020-01-13 09:40:31', 'snack_01'),
+(59, 156, 4, 4, '', 25, 1, 1, '2020-01-13 09:40:57', 'snack_01'),
+(60, 156, 4, 4, '', 25, 1, 1, '2020-01-13 09:40:57', 'snack_01'),
+(61, 159, 3, 4, '', 25, 1, 1, '2020-01-13 09:45:43', 'snack_01');
 
 -- --------------------------------------------------------
 
@@ -113,7 +153,8 @@ INSERT INTO `items` (`id`, `name`, `item_type`, `cost`, `supplier_id`, `agent_id
 (1, 'bev_01', 1, '30,45,60', NULL, 1, '2019-08-15 14:45:01'),
 (2, 'bev_02', 1, '25,30,45', NULL, 1, '2019-08-15 14:45:21'),
 (3, 'dish_01', 2, '45', NULL, 1, '2019-08-15 14:45:40'),
-(4, 'snack_01', 3, '25', NULL, 1, '2019-08-15 14:45:56');
+(4, 'snack_01', 3, '25', NULL, 1, '2019-08-15 14:45:56'),
+(6, 'mocha', 1, '30,45,55', NULL, 1, '2019-11-20 14:29:42');
 
 -- --------------------------------------------------------
 
@@ -156,8 +197,11 @@ CREATE TABLE `mod_bev` (
 --
 
 INSERT INTO `mod_bev` (`id`, `name`, `cost`, `agent_id`, `mod_date`) VALUES
-(1, 'mod_bev_01', 5, 1, '2019-08-19 14:10:56'),
-(2, 'mod_bev_02', 10, 1, '2019-08-19 15:54:51');
+(1, 'vanilla syrup', 5, 1, '2019-08-19 14:10:56'),
+(2, 'hazelnut syrup', 10, 1, '2019-08-19 15:54:51'),
+(3, 'less sweet', 0, 1, '2019-11-20 14:31:34'),
+(4, 'more sweet', 0, 1, '2019-11-20 14:31:34'),
+(5, 'not sweet', 0, 1, '2019-11-20 14:31:34');
 
 -- --------------------------------------------------------
 
@@ -206,7 +250,7 @@ CREATE TABLE `proc_trans` (
 --
 
 INSERT INTO `proc_trans` (`id`, `order_id`, `cus_id`, `item_id`, `mod_item`, `abs_cost`, `unit`, `work_stat`, `agent_id`, `add_date`, `item_details`) VALUES
-(4, 34, 1, 1, '1,2', 45, 1, 0, 1, '2019-11-07 17:31:54', 'bev_01(hot)/ mod_bev_01/ mod_bev_02');
+(2, 141, 3, 1, NULL, 30, 1, 0, 1, '2020-01-09 17:41:58', 'bev_01(hot)');
 
 -- --------------------------------------------------------
 
@@ -224,7 +268,7 @@ CREATE TABLE `status` (
 --
 
 INSERT INTO `status` (`id`, `cur_order_id`) VALUES
-(1, 34);
+(1, 159);
 
 -- --------------------------------------------------------
 
@@ -334,19 +378,19 @@ ALTER TABLE `agent`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `done_trans`
 --
 ALTER TABLE `done_trans`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `item_type`
@@ -358,7 +402,7 @@ ALTER TABLE `item_type`
 -- AUTO_INCREMENT for table `mod_bev`
 --
 ALTER TABLE `mod_bev`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `mod_dish`
@@ -370,7 +414,7 @@ ALTER TABLE `mod_dish`
 -- AUTO_INCREMENT for table `proc_trans`
 --
 ALTER TABLE `proc_trans`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `status`
