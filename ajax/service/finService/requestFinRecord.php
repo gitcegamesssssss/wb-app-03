@@ -42,6 +42,8 @@ if (isset($_GET['date'])) {
         $sql .= "LIKE '$_GET[date]%'";
     }
 
+    $sql .= "ORDER BY done_trans.id ASC";
+
     $res = mysqli_query(
         $conn,
         $sql
