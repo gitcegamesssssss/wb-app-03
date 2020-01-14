@@ -2,26 +2,35 @@
 <html lang="en">
 
 <head>
-    <title>Statistical Report</title>
+    <title>Finished Jobs</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>   
+    <script src="/wb-app-03/js/main.js"></script>
     <link href="../assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 
-<body>
-    <div id="navbar-main">       
+<body style="display:none">
+    <div id="navbar-main">
+    </div>
+    <div class="container-fluid">
+        <div class="container-fluid mt-3">
+                      
+        </div>        
     </div>
     <script>
+        checkToken(sessionStorage.wbUsr, sessionStorage.wbToken);
         $('#navbar-main').load("../components/navbar-main/navbar-main.html #navbar-main");
         $.getScript("../components/navbar-main/navbar-main.js");
+
+        //-------------------------        
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="../assets/bootstrap/js/bootstrap.js" crossorigin="anonymous"></script>
 </body>
 
-</html>
+</html>                                                 

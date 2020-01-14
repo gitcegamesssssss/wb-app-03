@@ -17,7 +17,7 @@ if (isset($_GET['date'])) {
 
     $conn = new mysqli($host, $username, $password, $database);
     mysqli_set_charset($conn, "utf8");
-    
+
     $sql = "SELECT 
     done_trans.id as id, 
     done_trans.order_id as order_id, 
@@ -34,10 +34,10 @@ if (isset($_GET['date'])) {
     JOIN agent ON done_trans.agent_id = agent.id
     WHERE done_trans.add_date ";
 
-    if(isset($_GET['minTime']) && isset($_GET['maxTime'])){
+    if (isset($_GET['minTime']) && isset($_GET['maxTime'])) {
         //date-time filtering
         $sql .= "BETWEEN '$_GET[date] $_GET[minTime]:00' AND '$_GET[date] $_GET[maxTime]:00'";
-    }else{
+    } else {
         //only date filtering
         $sql .= "LIKE '$_GET[date]%'";
     }
@@ -49,25 +49,29 @@ if (isset($_GET['date'])) {
         $sql
     );
 
-    $jsonStr = "[";
-    while ($row = mysqli_fetch_array($res)) {
-        $tmpObj = new stdClass();
-        $tmpObj->id = $row['id'];
-        $tmpObj->orderId = $row['order_id'];
-        $tmpObj->itemName = $row['item_name'];
-        $tmpObj->customerName = $row['customer_name'];
-        $tmpObj->cost = $row['cost'];
-        $tmpObj->unit = $row['unit'];
-        $tmpObj->agentName = $row['agent_name'];
-        $tmpObj->itemDetails = $row['item_details'];
-        $tmpObj->addDate = $row['add_date']; 
+    if (mysqli_num_rows($res) != 0) {
+        $jsonStr = "[";
+        while ($row = mysqli_fetch_array($res)) {
+            $tmpObj = new stdClass();
+            $tmpObj->id = $row['id'];
+            $tmpObj->orderId = $row['order_id'];
+            $tmpObj->itemName = $row['item_name'];
+            $tmpObj->customerName = $row['customer_name'];
+            $tmpObj->cost = $row['cost'];
+            $tmpObj->unit = $row['unit'];
+            $tmpObj->agentName = $row['agent_name'];
+            $tmpObj->itemDetails = $row['item_details'];
+            $tmpObj->addDate = $row['add_date'];
 
-        $tmpJSON = json_encode($tmpObj);
-        $jsonStr .= $tmpJSON.",";
+            $tmpJSON = json_encode($tmpObj);
+            $jsonStr .= $tmpJSON . ",";
+        }
+        $jsonStr = substr($jsonStr, 0, -1);
+        $jsonStr .= "]";
+        die($jsonStr);
+    }else{
+        die("0");
     }
-    $jsonStr = substr($jsonStr, 0, -1);
-    $jsonStr .= "]";
-    die ($jsonStr);
 } else {
     die("0");
 }

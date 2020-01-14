@@ -20,13 +20,13 @@
     <div class="container-fluid">
         <div class="container-fluid mt-3">
             <div class="row">
-                <div class="col-md-6 float-left">
+                <div class="col-md-6 float-left">                    
                     <span class="mx-md-3 font-weight-bold">
                         <span class="oi oi-calendar"></span>
                         <span>Date : </span>
                         <span id="current-date" class="text-primary"></span>
-                    </span>
-                </div>
+                    </span>                    
+                </div>                
             </div>
             <!-- #table controller -->            
             <div class="row mt-3">
@@ -34,16 +34,21 @@
                     <div class="input-group-prepend">                        
                         <div class="form-group float-left">                        
                             <input class="form-control" id="table-text-controller" type="text" placeholder="search by customer ..." oninput="textCooking(this.value)">                            
-                        </div>                                   
+                        </div>  
+                        <span class="text-secondary mt-2 mx-2"> Result : <span id="total-result-show">0</span> </span>                                 
                     </div>                    
                 </div>
                 <div class="col-5 ">
                     <div class="input-group-prepend text-center float-right">
-                        <p class="mt-2 mx-2">from</p>
+                        <p class="mt-2 mx-2" id="lable-date-controller">Date</p>
+                        <div class="form-group">
+                            <input class="form-control" type="date" value="" id="table-date-controller" onchange="dateUpdate()">
+                        </div>
+                        <p class="mt-2 mx-2">From</p>
                         <div class="form-group">
                             <input class="form-control" type="time" value="00:00" id="table-min-time-controller" onchange="timeUpdate()">
                         </div>
-                        <p class="mt-2 mx-2">to</p>
+                        <p class="mt-2 mx-2">To</p>
                         <div class="form-group">
                             <input class="form-control" type="time" value="23:59" id="table-max-time-controller" onchange="timeUpdate()">
                         </div>                
@@ -102,7 +107,9 @@
         var t_m = t_n.getMonth() + 1;
         var t_d = t_n.getDate();
         var t_ds = t_n.getDay();
-        document.getElementById("current-date").innerHTML = t_days[t_ds] + " " + t_m + "/" + t_d + "/" + t_y;
+        var current_date = `${t_y}-${String("0" + t_m).slice(-2)}-${t_d}`;
+        document.getElementById("table-date-controller").value = current_date;
+        document.getElementById("current-date").innerHTML = t_days[t_ds] + " " + String("0" + t_m).slice(-2) + "/" + t_d + "/" + t_y;
         //-------------------------
         var rawData = ""; //json-string
         var cookedData = "";//json-obj
@@ -112,26 +119,9 @@
         var strMinTime = document.getElementById("table-min-time-controller").value;
         var strMaxTime = document.getElementById("table-max-time-controller").value;
         //-------------------------
-        $(document).ready(function () {                
-                //generate table                
-                //-requesting raw data
-                /*$.ajax({
-                    url: `/wb-app-03/ajax/service/finService/requestFinRecord.php?date=${strDate}&minTime=${strMinTime}&maxTime=${strMaxTime}`,
-                    type: 'GET',
-                    success: function (result) {
-                        if (result != "0") {
-                            rawData = result;  
-                            //init cooked data
-                            cookedData = rawData;
-                            cookedData = JSON.parse(cookedData);
-                            sizeCooking(size);                 
-                            generateTable(); 
-                            createPagination(size);                                                                                                                                            
-                        }
-                    }
-                });*/
+        $(document).ready(function () {                     
                 requestData();
-            });      
+        });      
         //============= function-zone ====================
         //============= function-zone ====================
         //============= function-zone ====================
@@ -162,11 +152,9 @@
                 cell_8.innerHTML = el.agentName;
                 cell_9.innerHTML = el.addDate; 
                 i++;
-            });            
+            });                        
         }
-        function sizeCooking(size) {
-            cookedData = rawData;
-            cookedData = JSON.parse(cookedData);
+        function sizeCooking(size) {            
             cookedData.reverse();
             //sizing cookedData from rawData            
             let popAmount = cookedData.length - size;
@@ -223,22 +211,28 @@
                 bar.appendChild(newLi);       
             }
         }
-        function requestData(){
-            let strDate = `${String(t_n.getFullYear())}-${String("0" + (t_n.getMonth() + 1)).slice(-2)}-${String("0" + t_n.getDate()).slice(-2)}`;
-            console.log(`date string : ${strDate} ${strMinTime} ${strMaxTime}`);
+        function requestData(){            
+            let strDate = document.getElementById("table-date-controller").value;
             $.ajax({
                 url: `/wb-app-03/ajax/service/finService/requestFinRecord.php?date=${strDate}&minTime=${strMinTime}&maxTime=${strMaxTime}`,
                 type: 'GET',
                 success: function (result) {
                     if (result != "0") {
+                        console.log(`requesting : ${strDate} ${strMinTime} ${strMaxTime}`);
                         rawData = result;  
                         //init cooked data
                         cookedData = rawData;
                         cookedData = JSON.parse(cookedData);
-                        sizeCooking(size);                 
-                        generateTable(); 
-                        createPagination(size); 
+                        document.getElementById("total-result-show").innerHTML = cookedData.length;                        
+                    }else{
+                        rawData = "[]";
+                        cookedData = rawData;
+                        cookedData = JSON.parse(cookedData);
+                        document.getElementById("total-result-show").innerHTML = 0;                        
                     }
+                    sizeCooking(size);                 
+                    generateTable(); 
+                    createPagination(size); 
                 }
             });
         }
@@ -258,6 +252,7 @@
                  }                 
             }
             cookedData = tmpData;
+            document.getElementById("total-result-show").innerHTML = cookedData.length;  
             //size cook
             let popAmount = cookedData.length - size;
             for (let index = 0; index < popAmount; index++) {
@@ -265,7 +260,22 @@
             }
             cookedData.reverse();            
             createPagination(size);     
-            generateTable();       
+            generateTable();           
+        }
+        function dateUpdate(){
+            let inputDate = document.getElementById("table-date-controller").value;
+            let dateObj = new Date(inputDate);
+            inputDate = inputDate.split("-");                      
+            //display new date string
+            document.getElementById("current-date").innerHTML = t_days[dateObj.getDay()] + " " + inputDate[1] + "/" + inputDate[2] + "/" + inputDate[0];
+            document.getElementById("current-date").classList = "";            
+            if(document.getElementById("table-date-controller").value != current_date){
+                document.getElementById("current-date").classList = "text-warning";
+            }else{
+                document.getElementById("current-date").classList = "text-primary";
+            }                                 
+            //request new data by new setting (date and time)
+            requestData();
         }
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
