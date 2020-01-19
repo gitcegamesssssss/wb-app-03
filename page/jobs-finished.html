@@ -154,7 +154,9 @@
                 i++;
             });                        
         }
-        function sizeCooking(size) {            
+        function sizeCooking(size) {  
+            cookedData = rawData;
+            cookedData = JSON.parse(cookedData);                  
             cookedData.reverse();
             //sizing cookedData from rawData            
             let popAmount = cookedData.length - size;
@@ -163,7 +165,7 @@
             }
             cookedData.reverse();
         }
-        function sizeChange(newsize){
+        function sizeChange(newsize){            
             size = newsize;
             sizeCooking(size);
             generateTable();  

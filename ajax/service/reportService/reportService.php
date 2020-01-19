@@ -27,7 +27,9 @@ if (isset($_GET['date'])) {
     done_trans.unit as unit, 
     agent.name as agent_name, 
     done_trans.add_date as add_date, 
-    done_trans.item_details as item_details    
+    done_trans.item_details as item_details,
+    done_trans.item_id as item_id,
+    items.item_type as item_type
     FROM done_trans 
     JOIN customers ON done_trans.cus_id = customers.id
     JOIN items ON done_trans.item_id = items.id
@@ -52,15 +54,12 @@ if (isset($_GET['date'])) {
     if (mysqli_num_rows($res) != 0) {
         $jsonStr = "[";
         while ($row = mysqli_fetch_array($res)) {
-            $tmpObj = new stdClass();
-            $tmpObj->id = $row['id'];
-            $tmpObj->orderId = $row['order_id'];
+            $tmpObj = new stdClass();            
             $tmpObj->itemName = $row['item_name'];
-            $tmpObj->customerName = $row['customer_name'];
+            $tmpObj->itemId = $row['item_id'];
+            $tmpObj->itemType = $row['item_type'];            
             $tmpObj->cost = $row['cost'];
-            $tmpObj->unit = $row['unit'];
-            $tmpObj->agentName = $row['agent_name'];
-            $tmpObj->itemDetails = $row['item_details'];
+            $tmpObj->unit = $row['unit'];                
             $tmpObj->addDate = $row['add_date'];
 
             $tmpJSON = json_encode($tmpObj);
