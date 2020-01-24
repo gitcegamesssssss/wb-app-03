@@ -82,9 +82,7 @@
             <div class="col-1 text-secondary text-right">   
                 <br><br>             
                 <p>peak-time</p>
-                <p class="text-primary" id="peak-time">~06.00</p>
-                <p>peak-order</p>
-                <p class="text-primary" id="peak-order">Mocha</p>
+                <p class="text-primary" id="peak-time">~06.00</p>                
             </div>
         </div>                 
     </div>
@@ -335,6 +333,27 @@
                            
 
                             //--time-line-chart--
+                            
+                            let timeChartRes = JSON.parse(result);
+                            let checkTime = ['06:00', '06:30', '07:00', '07:30', '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00','13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'];
+                            let timeChartDataset = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];//6.00-20.00
+                            let curHour = new Date();
+                            curHour = curHour.getHours();//check from 6.00 -> curHour                            
+                            timeChartRes.forEach(el => {
+                                let tmpTime = el.addDate;
+                                tmpTime = tmpTime.split(" ");
+                                tmpTime = tmpTime[1];
+                                tmpTime = tmpTime.slice(0,-3);
+                                el.addDate = tmpTime;                                
+                            });                                                           
+                            for (let i = 0; i < checkTime.length; i++) {    //checkTime                                                           
+                                for (let j = 0; j < timeChartRes.length; j++) {   //timeChartRes
+                                    if(checkTime[i] <= timeChartRes[j].addDate && timeChartRes[j].addDate < checkTime[i+1]){                                        
+                                        timeChartDataset[i] += parseInt(timeChartRes[j].unit);
+                                    }                      
+                                }                                
+                            }
+                            document.getElementById("peak-time").innerHTML = `~${checkTime[timeChartDataset.indexOf(Math.max.apply(Math, timeChartDataset))]}`;
                             ctx = document.getElementById('line-time').getContext('2d');
                             var timeLineChart = new Chart(ctx, {
                                 // The type of chart we want to create
@@ -342,11 +361,11 @@
 
                                 // The data for our dataset
                                 data: {
-                                    labels: ['6.00', '7.00', '8.00', '9.00', '10.00', '11.00', '12.00', '13.00', '14.00', '15.00', '16.00', '17.00', '18.00', '19.00', '20.00'],
+                                    labels: checkTime,
                                     datasets: [{
-                                        backgroundColor: ['rgb(255, 0, 132)'],
+                                        backgroundColor: ['rgb(255, 255, 255)'],
                                         borderColor: 'rgb(4,123,255)',
-                                        data: [8, 10, 5, 8, 10, 5, 8, 10, 5, 8, 10, 5, 8, 10, 5]
+                                        data: timeChartDataset
                                     }]
                                 },
 
