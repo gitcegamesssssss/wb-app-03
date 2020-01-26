@@ -42,7 +42,7 @@ if (isset($_GET["orderId"])) {
             $conn,
             "UPDATE customers SET point = point + 10, discount = '$newStrDiscount' WHERE id = $row[customer_id]"
         );
-    }
+    }    
 } else {
     echo ("invalid param.");
 }

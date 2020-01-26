@@ -15,6 +15,8 @@ $database = "wbdb";
 $conn = new mysqli($host, $username, $password, $database);
 mysqli_set_charset($conn, "utf8");
 
+$addPoint = "UPDATE customers SET point = point + $_GET[point] WHERE id = $_GET[cusId]";
+
 if($conn->connect_error){
     die('0');
 }else{
@@ -23,6 +25,8 @@ if($conn->connect_error){
     ){
         die('1');
     }else{
+        if($_GET['cusId'] != 1)
+            mysqli_query($conn, $addPoint);
         die('2');
     }    
 }

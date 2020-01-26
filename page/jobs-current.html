@@ -89,26 +89,33 @@
                 recalCurrentJobs();
             });
         }  
-        function delOrder(order){
-            var state = confirm(`Are you sure for deleting order #${order}?`);
-            if (state == true) {
-                //ajax exe delete order service 
-                $.ajax({
-                    url: `/wb-app-03/ajax/service/returnDiscount.php?orderId=${order}`,
-                    type: 'GET',
-                    success: function (result) {
-                        $.ajax({
-                            url: `/wb-app-03/ajax/service/deleteWholeOrder.php?id=${order}`,
-                            type: 'GET',
-                            success: function (result) {
-                                console.log(`order #${order} has been deleted!`);
-                                reloadTable();
-                            }
-                        });
-                    }
-                });
+        function delOrder(order) {
+                console.log(`/wb-app-03/ajax/returnPoint.php?orderId=${order}`);
+                var state = confirm(`Are you sure for deleting order #${order}?`);
+                if (state == true) {
+                    //ajax exe delete order service 
+                    $.ajax({
+                        url: `/wb-app-03/ajax/service/returnDiscount.php?orderId=${order}`,
+                        type: 'GET',
+                        success: function (result) {
+                            $.ajax({
+                                url: `/wb-app-03/ajax/returnPoint.php?orderId=${order}`,
+                                type: 'GET',
+                                success: function (result) {                                    
+                                    $.ajax({
+                                        url: `/wb-app-03/ajax/service/deleteWholeOrder.php?id=${order}`,
+                                        type: 'GET',
+                                        success: function (result) {
+                                            console.log(`order #${order} has been deleted!`);
+                                            reloadTable();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
             }
-        }
         function delRecord(record){
             var state = confirm(`Are you sure for deleting record ${record}?`);
             if(state == true){                

@@ -177,7 +177,7 @@
                                     labels: ['bev', 'dish', 'snack'],
                                     datasets: [{
                                         label: 'My First dataset',
-                                        backgroundColor: ['rgb(75,134,180)', 'rgb(173,203,227)', 'rgb(231,239,246)'],
+                                        backgroundColor: colorGenerator([metaGlobal.bevAmount, metaGlobal.dishAmount, metaGlobal.snackAmount]),
                                         borderColor: 'rgb(42,77,105)',
                                         data: [metaGlobal.bevAmount, metaGlobal.dishAmount, metaGlobal.snackAmount]
                                     }]
@@ -201,7 +201,7 @@
                                 }else{
                                     bevPieDataset[bevPieLabels.indexOf(el.itemName)] += parseInt(el.unit);
                                 }
-                            });
+                            });                            
                             ctx = document.getElementById('pie-bev').getContext('2d');
                             var bevPieChart = new Chart(ctx, {
                                 // The type of chart we want to create
@@ -213,7 +213,7 @@
                                     datasets: [{
                                         label: 'My First dataset',                                        
                                         borderColor: 'rgb(42,77,105)',
-                                        backgroundColor: ['#F5F5F5','#E0E0E0','#BDBDBD','#9E9E9E','#ECEFF1','#CFD8DC','#B0BEC5','#90A4AE'],
+                                        backgroundColor: colorGenerator(bevPieDataset),
                                         data: bevPieDataset
                                     }]                                    
                                 },
@@ -249,7 +249,7 @@
                                     datasets: [{
                                         label: 'My First dataset',
                                         borderColor: 'rgb(42,77,105)',
-                                        backgroundColor: ['#F5F5F5','#E0E0E0','#BDBDBD','#9E9E9E','#ECEFF1','#CFD8DC','#B0BEC5','#90A4AE'],
+                                        backgroundColor: colorGenerator(dishPieDataset),
                                         data: dishPieDataset
                                     }]
                                 },
@@ -285,7 +285,7 @@
                                     datasets: [{
                                         label: 'My First dataset',
                                         borderColor: 'rgb(42,77,105)',
-                                        backgroundColor: ['#F5F5F5','#E0E0E0','#BDBDBD','#9E9E9E','#ECEFF1','#CFD8DC','#B0BEC5','#90A4AE'],
+                                        backgroundColor: colorGenerator(snackPieDataset),
                                         data: snackPieDataset
                                     }]
                                 },
@@ -335,7 +335,7 @@
                             //--time-line-chart--
                             
                             let timeChartRes = JSON.parse(result);
-                            let checkTime = ['06:00', '06:30', '07:00', '07:30', '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00','13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'];
+                            let checkTime = ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00','13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'];
                             let timeChartDataset = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];//6.00-20.00
                             let curHour = new Date();
                             curHour = curHour.getHours();//check from 6.00 -> curHour                            
@@ -347,9 +347,11 @@
                                 el.addDate = tmpTime;                                
                             });                                                           
                             for (let i = 0; i < checkTime.length; i++) {    //checkTime                                                           
-                                for (let j = 0; j < timeChartRes.length; j++) {   //timeChartRes
+                                for (let j = 0; j < timeChartRes.length; j++) {   //timeChartRes                                    
                                     if(checkTime[i] <= timeChartRes[j].addDate && timeChartRes[j].addDate < checkTime[i+1]){                                        
                                         timeChartDataset[i] += parseInt(timeChartRes[j].unit);
+                                        console.log(`${checkTime[i]} <= ${timeChartRes[j].addDate}\n`);
+                                        console.log(`${timeChartRes[j].addDate} < ${checkTime[i+1]}\n`);
                                     }                      
                                 }                                
                             }
@@ -380,9 +382,29 @@
                             console.log("Error");
                         }                        
                     }                    
-                });
-
-            });
+                });                
+            });  
+            function colorGenerator(dataset){//generate color for dataset and highligh maximum value
+                    console.log("inside color generator of dataset V");
+                    console.log(dataset);
+                    const colorPattern = ["rgb(224,224,224)", "rgb(245,245,245)"]; 
+                    const colorMax = "rgb(4,123,255)";
+                    let maxIndex = dataset.indexOf(Math.max.apply(Math, dataset));
+                    let colors = [];
+                    console.log(`max index is ${maxIndex}`);
+                    //generate color
+                    let tmp = 0;
+                    for (let i = 0; i < dataset.length; i++) {    
+                        if(i == maxIndex){
+                            colors.push(colorMax);
+                            tmp = 1;
+                        }else{
+                            colors.push(colorPattern[((i+tmp)%2)]); 
+                        }                                                      
+                    }    
+                    console.log(colors);  
+                    return colors;              
+            }      
         //-------------------------                  
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

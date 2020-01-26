@@ -458,12 +458,13 @@ $order_id = $order_id['cur_order_id'] + 1;
         //Order data
         var orderId = document.getElementById("input-order-id").value;
         //user data
-        var userInfo;
+        var userInfo= {id: "1", name: "GUEST", tel: "0", point: "0"};
         var discountState = 0;
         //added items (items storage & items status)
         var arrItems = [];
         var totalOrders = 0;
         var totalCost = 0;
+        var point = 0;
         //----------------   
         var tmpBevProp;
         var tmpDishProp;
@@ -479,8 +480,8 @@ $order_id = $order_id['cur_order_id'] + 1;
                 $("#modal-adding-loader").modal('show');
                 confirmDiscount();
                 $.ajax({
-                    url: `../ajax/addItems.php?
-                sql=${sql}&cur_order_id=${document.getElementById("input-order-id").value}`,
+                    url: `/wb-app-03/ajax/addItems.php?
+                sql=${sql}&cur_order_id=${document.getElementById("input-order-id").value}&point=${point}&cusId=${parseInt(userInfo.id)}`,
                     type: 'GET',
                     success: function(result) {
                         console.log(result);
@@ -489,11 +490,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                             document.getElementById("loader-failed").style.display = "initial";
                         } else {
                             document.getElementById("loader-complete").style.display = "initial";
-                            clearTable();
-                            $.ajax({
-                                url: '/wb-app-03/ajax/service/signal.php',
-                                type: 'GET'
-                            });
+                            clearTable();                                                                
                             window.location.replace("/wb-app-03/page/jobs-current.html");
                         }
                     }
@@ -540,6 +537,7 @@ $order_id = $order_id['cur_order_id'] + 1;
             updateTotalCost();
             updateTotalOrders();
             calBalance();
+            point += parseInt(tmpBevProp.quantities);
         }
 
         function addDish() {
