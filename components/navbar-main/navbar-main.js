@@ -17,12 +17,12 @@ switch (page) {
         $('#jobs-finished').addClass('active');
         $('#jobs').addClass('active');
         break;
-    case 'report-today':
-        $('#report-today').addClass('active');
+    case 'report-overview':
+        $('#report-overview').addClass('active');
         $('#report').addClass('active');
         break;
-    case 'report-stat':
-        $('#report-stat').addClass('active');
+    case 'report-details':
+        $('#report-details').addClass('active');
         $('#report').addClass('active');
         break;
     default:
