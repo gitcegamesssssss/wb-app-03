@@ -74,12 +74,13 @@
 					password: `${password}`
 				},
 				function (data) {
-					//alert("Data: " + data);		
+					//alert("Data: " + data);
+					alert(`${data}`);		
 					if(data == '0' || data == '1'){	
 						alert("something went wrong!");
-						window.location.href = "/wb-app-03/page/login/";											
+						//window.location.href = "/wb-app-03/page/login/";											
 					}else{
-						//save token
+						//save token						
 						var splitedData = data.split(" ");
 						sessionStorage.setItem("wbUsr", username);
 						sessionStorage.setItem("wbToken", splitedData[0]);
@@ -88,7 +89,7 @@
 						window.location.href = "/wb-app-03/page/jobs-current.html";
 					}	
 				}
-			); 		
+			);
 		}
 	</script>
 	<!--===============================================================================================-->

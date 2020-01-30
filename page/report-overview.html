@@ -24,73 +24,112 @@
 <body style="display:none">
     <div id="navbar-main">
     </div>
-    <div class="container-fluid">
-        <div class="container-fluid mt-3">
-            <div class="row">
-                <div class="col-md-6 float-left">                    
-                    <span class="mx-md-3 font-weight-bold">
-                        <span class="oi oi-calendar"></span>
-                        <span>Date : </span>
-                        <span id="current-date" class="text-primary"></span>
-                    </span>                    
-                </div>                
-            </div>            
-        </div>
-        <!--piechart-->             
-        <div class="row mt-3 mx-3">
-            <div class="col-3 text-center">                
-                <p class="h4">Total incomes: <span id="total-income" class="text-primary font-weight-bold">10,000</span></p>
-                <canvas id="pie-summary">                    
-                </canvas>                
-            </div>            
-            <div class="col-3 text-center">                
-                <p class="h4">Bev. incomes: <span id="bev-income" class="text-primary">10,000</span></p>
-                <canvas id="pie-bev">                    
-                </canvas>
-            </div>
-            <div class="col-3 text-center">
-                <p class="h4">Dish incomes:<span id="dish-income" class="text-primary">10,000</span></p>
-                <canvas id="pie-dish">                    
-                </canvas>
-            </div>
-            <div class="col-3 text-center">
-                <p class="h4">Snack incomes:<span id="snack-income" class="text-primary">10,000</span></p>
-                <canvas id="pie-snack">                    
-                </canvas>
-            </div>
-        </div> 
-
-        <div class="dropdown-divider mt-4"></div>
-        <!--ranking and timing-->
-        <div class="row mt-3 mx-3">
-            <div class="col-2">
-                <p class="h4">Menu Ranking <span class="oi oi-signal text-primary"></span></p>
-                <div id="menu-ranking">
-                    <ul class="list-group">
-                        <li class="list-group-item">1. First item</li>
-                        <li class="list-group-item">2. Second item</li>
-                        <li class="list-group-item">3. Third item</li>
-                        <li class="list-group-item">4. First item</li>
-                        <li class="list-group-item">5. Second item</li>
-                        <li class="list-group-item">6. Third item</li>
-                        <li class="list-group-item">7. First item</li>
-                        <li class="list-group-item">8. Second item</li>
-                        <li class="list-group-item">9. Third item</li>
-                        <li class="list-group-item">10. Third item</li>
-                      </ul>
+    <div class="container-fluid" id="main">
+        <div class="report-controller">
+            <div class="row mt-3">
+                <div class="col-6">
+                    <p class="my-2 mx-5 text-secondary text-left h4" id="text-filter"></p>                    
+                </div>
+                <div class="col-2">
+                    <div class="input-group-prepend text-center float-right">                        
+                        <div class="form-group">
+                            <div class="form-group">                             
+                              <select class="form-control" name="" id="" onchange="changeInputType(this.value);">
+                                <option value="1" selected>single</option>
+                                <option value="2">between</option>
+                              </select>
+                            </div>
+                        </div>           
+                    </div>
+                </div>
+                <div class="col-4">
+                    <!-- single input -->
+                    <div id="single-input">
+                        <div class="input-group-prepend text-center float-left">
+                            <p class="my-2 mx-2">from</p>
+                            <div class="form-group">
+                                <input class="form-control" type="date" value="" id="date-input" onchange="singleChange()">
+                            </div>
+                            <p class="my-2 mx-2 text-secondary">to</p>
+                            <div class="form-group">
+                                <input class="form-control" type="date" value="" id="dis-date-input" onchange="" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- between input -->  
+                    <div id="between-input" style="display: none;">
+                        <div class="input-group-prepend text-center float-left">
+                            <p class="my-2 mx-2">from</p>
+                            <div class="form-group">
+                                <input class="form-control" type="date" value="" id="min-date-input" onchange="betweenChange()">
+                            </div>
+                            <p class="my-2 mx-2">to</p>
+                            <div class="form-group">
+                                <input class="form-control" type="date" value="" id="max-date-input" onchange="betweenChange()">
+                            </div>
+                        </div>
+                    </div>                
                 </div>
             </div>
-            <div class="col-9">
-                <p class="h4 text-center">Time Chart <span class="text-primary">06:00 - 20:00</span> </p>
-                <canvas id="line-time" width="400" height="150" role="img">                    
-                </canvas>
+        </div>
+        <div id="div-report">
+            <!--piechart-->
+            <div class="row mt-3 mx-3">
+                <div class="col-3 text-center">
+                    <p class="h4">Total incomes: <span id="total-income" class="text-primary font-weight-bold">10,000</span></p>
+                    <canvas id="pie-summary">
+                    </canvas>
+                </div>
+                <div class="col-3 text-center">
+                    <p class="h4">Bev. incomes: <span id="bev-income" class="text-primary">10,000</span></p>
+                    <canvas id="pie-bev">
+                    </canvas>
+                </div>
+                <div class="col-3 text-center">
+                    <p class="h4">Dish incomes:<span id="dish-income" class="text-primary">10,000</span></p>
+                    <canvas id="pie-dish">
+                    </canvas>
+                </div>
+                <div class="col-3 text-center">
+                    <p class="h4">Snack incomes:<span id="snack-income" class="text-primary">10,000</span></p>
+                    <canvas id="pie-snack">
+                    </canvas>
+                </div>
             </div>
-            <div class="col-1 text-secondary text-right">   
-                <br><br>             
-                <p>peak-time</p>
-                <p class="text-primary" id="peak-time">~06.00</p>                
+            <div class="dropdown-divider mt-4"></div>
+            <!--ranking and timing-->
+            <div class="row mt-3 mx-3">
+                <div class="col-2">
+                    <p class="h4">Menu Ranking <span class="oi oi-signal text-primary"></span></p>
+                    <div id="menu-ranking">
+                        <ul class="list-group">
+                            <li class="list-group-item">1. First item</li>
+                            <li class="list-group-item">2. Second item</li>
+                            <li class="list-group-item">3. Third item</li>
+                            <li class="list-group-item">4. First item</li>
+                            <li class="list-group-item">5. Second item</li>
+                            <li class="list-group-item">6. Third item</li>
+                            <li class="list-group-item">7. First item</li>
+                            <li class="list-group-item">8. Second item</li>
+                            <li class="list-group-item">9. Third item</li>
+                            <li class="list-group-item">10. Third item</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-9">                    
+                    <canvas id="line-time" width="400" height="150" role="img">
+                    </canvas>
+                </div>
+                <div class="col-1 text-secondary text-right">
+                    <br><br>
+                    <p>peak-time</p>
+                    <p class="text-primary" id="peak-time">~06.00</p>
+                </div>
             </div>
-        </div>                 
+        </div>
+        <div id="no-result-alert" style="margin-top: 300px;margin-bottom: auto;">        
+            <p class="h3 text-secondary text-center">No data of selected days.</p>        
+        </div>                       
     </div>
     <script>
         checkToken(sessionStorage.wbUsr, sessionStorage.wbToken);
@@ -104,322 +143,72 @@
         var t_d = t_n.getDate();
         var t_ds = t_n.getDay();
         var current_date = `${t_y}-${String("0" + t_m).slice(-2)}-${t_d}`;
+        document.getElementById("date-input").value = current_date;
+        document.getElementById("dis-date-input").value = current_date;
+        document.getElementById("text-filter").innerHTML = dateConvert(current_date);
+        /** 
+        *! chart dataset
+        */
         var metaGlobal = [];
-        document.getElementById("current-date").innerHTML = t_days[t_ds] + " " + String("0" + t_m).slice(-2) + "/" + t_d + "/" + t_y;
+
+        var bevPieLabels;
+        var bevPieDataset = [];
+        var dishPieLabels;
+        var dishPieDataset = [];
+        var snackPieLabels;
+        var snackPieDataset = [];
+
+        var ranked = [];
+
+        var checkTime = ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00','13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'];
+        var timeChartDataset = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        var peakTime = '';
+        /** 
+        *! end of chart dataset
+        */
+
+        /** 
+        *! chart instance
+        */
+        var sumPieChart;
+        var bevPieChart;
+        var dishPieChart;
+        var snackPieChart;
+        var timeLineChart;
+        /** 
+        *! end of chart instance
+        */
+
+        //document.getElementById("current-date").innerHTML = t_days[t_ds] + " " + String("0" + t_m).slice(-2) + "/" + t_d + "/" + t_y;
         //-------------------------  
         $(document).ready(function () {
-                console.log(`using service : /wb-app-03/ajax/service/reportService/reportService.php?date=${t_y + '-' + String("0" + t_m).slice(-2) + '-' + String("0" + t_d).slice(-2)}`);
-                $.ajax({
-                    url: `/wb-app-03/ajax/service/reportService/reportService.php?date=${t_y + '-' + String("0" + t_m).slice(-2)}`,
-                    type: "GET",
-                    beforeSend: function () {
-                        console.log("request data...");
-                    },
-                    success: function (result) {
-                        if (result != "0") {                                                     
-                            //------cal dataset for each chart--------
-                            var resJson = JSON.parse(result);
-                            console.log(result); 
-                            console.log(resJson);                                                        
-                            //------cal meta data---------------------
-                            //--incomes                            
-                            let bevIncome = 0;
-                            let dishIncome = 0;
-                            let snackIncome = 0;
-                            let bevType = [];
-                            let dishType = [];
-                            let snackType = [];
-                            let bevAmount = 0;
-                            let dishAmount = 0;
-                            let snackAmount = 0;                            
-                            resJson.forEach(el => {                                
-                                switch (el.itemType) {
-                                    case "1":   
-                                    bevIncome += parseInt(el.cost) * parseInt(el.unit);  
-                                    bevAmount += parseInt(el.unit);
-                                    if(!bevType.includes(el.itemName)){
-                                        bevType.push(el.itemName);                                        
-                                    }                         
-                                        break;
-                                    case "2":       
-                                    dishAmount += parseInt(el.unit); 
-                                    dishIncome += parseInt(el.cost) * parseInt(el.unit);  
-                                    if(!dishType.includes(el.itemName)){
-                                        dishType.push(el.itemName);
-                                    }                               
-                                        break;
-                                    case "3":   
-                                    snackAmount += parseInt(el.unit);
-                                    if(!snackType.includes(el.itemName)){
-                                        snackType.push(el.itemName);
-                                    }   
-                                    snackIncome += parseInt(el.cost) * parseInt(el.unit);                                    
-                                        break;
-                                    default:
-                                        break;
-                                }                                
-                            });
-                            metaGlobal = {
-                                "bevIncome" : bevIncome,
-                                "dishIncome" : dishIncome,
-                                "snackIncome" : snackIncome,
-                                "totalIncome" : bevIncome + dishIncome + snackIncome,  
-                                "bevType" : bevType,
-                                "dishType" : dishType,
-                                "snackType" : snackType,
-                                "bevAmount" : bevAmount,
-                                "dishAmount" : dishAmount,
-                                "snackAmount" : snackAmount                              
-                            };                                                                                                                            
-                            //----------------------------------------
-                            //----------------------------------------
-                            //--summary-pie-chart--
-                            var ctx = document.getElementById('pie-summary').getContext('2d');
-                            var sumPieChart = new Chart(ctx, {
-                                // The type of chart we want to create
-                                type: 'pie',
-
-                                // The data for our dataset
-                                data: {
-                                    labels: ['bev', 'dish', 'snack'],
-                                    datasets: [{
-                                        label: 'My First dataset',
-                                        backgroundColor: colorGenerator([metaGlobal.bevAmount, metaGlobal.dishAmount, metaGlobal.snackAmount]),
-                                        borderColor: 'rgb(42,77,105)',
-                                        data: [metaGlobal.bevAmount, metaGlobal.dishAmount, metaGlobal.snackAmount]
-                                    }]
-                                },
-
-                                // Configuration options go here
-                                options: {
-                                    legend: {
-                                        position: 'bottom'
-                                    }
-                                }
-                            });
-                            document.getElementById("total-income").innerHTML = moneyFormat(metaGlobal.totalIncome.toString());
-
-                            //--beverage-pie-chart--
-                            let bevPieLabels = metaGlobal.bevType;
-                            let bevPieDataset = [];
-                            resJson.forEach(el => {                                
-                                if(bevPieDataset[bevPieLabels.indexOf(el.itemName)] == null){
-                                    bevPieDataset[bevPieLabels.indexOf(el.itemName)] = parseInt(el.unit);
-                                }else{
-                                    bevPieDataset[bevPieLabels.indexOf(el.itemName)] += parseInt(el.unit);
-                                }
-                            });                            
-                            ctx = document.getElementById('pie-bev').getContext('2d');
-                            var bevPieChart = new Chart(ctx, {
-                                // The type of chart we want to create
-                                type: 'doughnut',
-
-                                // The data for our dataset
-                                data: {
-                                    labels: bevPieLabels,                                    
-                                    datasets: [{
-                                        label: 'My First dataset',                                        
-                                        borderColor: 'rgb(42,77,105)',
-                                        backgroundColor: colorGenerator(bevPieDataset),
-                                        data: bevPieDataset
-                                    }]                                    
-                                },
-
-                                // Configuration options go here
-                                options: {
-                                    legend: {
-                                        display: false
-                                    }
-                                }
-                            });
-                            document.getElementById("bev-income").innerHTML = moneyFormat(metaGlobal.bevIncome.toString());
-
-                            //--dishes-pie-chart--
-                            let dishPieLabels = metaGlobal.dishType;
-                            let dishPieDataset = [];
-                            resJson.forEach(el => {                                
-                                if(dishPieDataset[dishPieLabels.indexOf(el.itemName)] == null){
-                                    dishPieDataset[dishPieLabels.indexOf(el.itemName)] = parseInt(el.unit);
-                                }else{
-                                    dishPieDataset[dishPieLabels.indexOf(el.itemName)] += parseInt(el.unit);
-                                }
-                            });                            
-                            ctx = document.getElementById('pie-dish').getContext('2d');
-                            var dishPieChart = new Chart(ctx, {
-                                // The type of chart we want to create
-                                type: 'doughnut',
-
-                                // The data for our dataset
-                                data: {
-                                    labels: dishPieLabels,
-                                    datasets: [{
-                                        label: 'My First dataset',
-                                        borderColor: 'rgb(42,77,105)',
-                                        backgroundColor: colorGenerator(dishPieDataset),
-                                        data: dishPieDataset
-                                    }]
-                                },
-
-                                // Configuration options go here
-                                options: {
-                                    legend: {
-                                        display: false
-                                    }
-                                }
-                            });
-                            document.getElementById("dish-income").innerHTML = moneyFormat(metaGlobal.dishIncome.toString());
-
-                            //--snack-pie-chart--
-                            let snackPieLabels = metaGlobal.snackType;
-                            let snackPieDataset = [];
-                            resJson.forEach(el => {                                
-                                if(snackPieDataset[snackPieLabels.indexOf(el.itemName)] == null){
-                                    snackPieDataset[snackPieLabels.indexOf(el.itemName)] = parseInt(el.unit);
-                                }else{
-                                    snackPieDataset[snackPieLabels.indexOf(el.itemName)] += parseInt(el.unit);
-                                }
-                            });
-                            ctx = document.getElementById('pie-snack').getContext('2d');
-                            var snackPieChart = new Chart(ctx, {
-                                // The type of chart we want to create
-                                type: 'doughnut',
-
-                                // The data for our dataset
-                                data: {
-                                    labels: snackPieLabels,
-                                    datasets: [{
-                                        label: 'My First dataset',
-                                        borderColor: 'rgb(42,77,105)',
-                                        backgroundColor: colorGenerator(snackPieDataset),
-                                        data: snackPieDataset
-                                    }]
-                                },
-
-                                // Configuration options go here
-                                options: {
-                                    legend: {
-                                        display: false
-                                    }
-                                }
-                            });
-                            document.getElementById("snack-income").innerHTML = moneyFormat(metaGlobal.snackIncome.toString());
-                            
-                            //--ranking----------                                                 
-                            let allItemType = metaGlobal.bevType.concat(metaGlobal.dishType.concat(metaGlobal.snackType));
-                            let allItemAmount = bevPieDataset.concat(dishPieDataset.concat(snackPieDataset));                            
-                            let tmpAllItemAmount = String(allItemAmount);                            
-                            let tmp = [];
-                            let ranked = [];
-                            tmpAllItemAmount = tmpAllItemAmount.split(",");                                                    
-                            tmpAllItemAmount.forEach(el => {
-                                if(!tmp.includes(parseInt(el))){
-                                    tmp.push(parseInt(el));
-                                }
-                            });  
-                            tmp.sort(function(a, b){return b - a});//sort tmp DESC                            
-                            for (let i = 0; i < tmp.length; i++) {                                                         
-                                for (let j = 0; j < allItemType.length; j++) {                                                                       
-                                    if(allItemAmount[j] == tmp[i])
-                                        ranked.push(`#${i+1}:${allItemType[j]} <span class='float-right text-primary'>${tmp[i]}</span>`);
-                                }
-                            }  
-                            ranked = ranked.slice(0,10);      
-                            //-show 10 rank-
-                            let ul = document.createElement("UL");
-                            ul.classList.add("list-group");
-                            for (let i = 0; i < ranked.length; i++) {                                
-                                let li = document.createElement("LI");
-                                li.innerHTML = ranked[i];
-                                li.classList.add("list-group-item");
-                                ul.appendChild(li);
-                            }
-                            document.getElementById("menu-ranking").innerHTML = "";
-                            document.getElementById("menu-ranking").appendChild(ul);
-                           
-
-                            //--time-line-chart--
-                            
-                            let timeChartRes = JSON.parse(result);
-                            let checkTime = ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00','13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'];
-                            let timeChartDataset = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];//6.00-20.00
-                            let curHour = new Date();
-                            curHour = curHour.getHours();//check from 6.00 -> curHour                            
-                            timeChartRes.forEach(el => {
-                                let tmpTime = el.addDate;
-                                tmpTime = tmpTime.split(" ");
-                                tmpTime = tmpTime[1];
-                                tmpTime = tmpTime.slice(0,-3);
-                                el.addDate = tmpTime;                                
-                            });                                                           
-                            for (let i = 0; i < checkTime.length; i++) {    //checkTime                                                           
-                                for (let j = 0; j < timeChartRes.length; j++) {   //timeChartRes                                    
-                                    if(checkTime[i] <= timeChartRes[j].addDate && timeChartRes[j].addDate < checkTime[i+1]){                                        
-                                        timeChartDataset[i] += parseInt(timeChartRes[j].unit);                                        
-                                    }                      
-                                }                                
-                            }
-                            document.getElementById("peak-time").innerHTML = `~${checkTime[timeChartDataset.indexOf(Math.max.apply(Math, timeChartDataset))]}`;
-                            ctx = document.getElementById('line-time').getContext('2d');
-                            var timeLineChart = new Chart(ctx, {
-                                // The type of chart we want to create
-                                type: 'line',
-
-                                // The data for our dataset
-                                data: {
-                                    labels: checkTime,
-                                    datasets: [{
-                                        backgroundColor: ['rgb(255, 255, 255)'],
-                                        borderColor: 'rgb(4,123,255)',
-                                        data: timeChartDataset
-                                    }]
-                                },
-
-                                // Configuration options go here
-                                options: {
-                                    legend: {
-                                        display: false
-                                    },
-                                    scales: {
-                                        yAxes: [{
-                                            scaleLabel: {
-                                                display: true,
-                                                labelString: 'Order in time ( Pieces ) '
-                                            }
-                                        }],
-                                        xAxes: [{
-                                            scaleLabel: {
-                                                display: true,
-                                                labelString: 'Time ( 30min/cell )'
-                                            }
-                                        }]
-                                    }     
-                                }
-                            });
-                        } else {
-                            console.log("Error");
-                        }                        
-                    }                    
-                });                
-            });  
-            function colorGenerator(dataset){//generate color for dataset and highligh maximum value                    
-                    const colorPattern = ["rgb(224,224,224)", "rgb(245,245,245)"]; 
-                    const colorMax = "rgb(4,123,255)";
-                    let maxIndex = dataset.indexOf(Math.max.apply(Math, dataset));
-                    let colors = [];                    
-                    //generate color
-                    let tmp = 0;
-                    for (let i = 0; i < dataset.length; i++) {    
-                        if(i == maxIndex){
-                            colors.push(colorMax);
-                            tmp = 1;
-                        }else{
-                            colors.push(colorPattern[((i+tmp)%2)]); 
-                        }                                                      
-                    }   
-                    
-                    return colors;              
-            }   
-            function moneyFormat(string){
+            console.log(`/wb-app-03/ajax/service/reportService/reportService.php?date=${current_date}`);
+            console.log(metaGlobal);    
+            
+            document.getElementById("div-report").style.display = "none";
+            document.getElementById("no-result-alert").style.display = "block";  
+            initRender();
+            requestData(`date=${current_date}`);
+        });  
+        function colorGenerator(dataset){//generate color for dataset and highligh maximum value                    
+                const colorPattern = ["rgb(224,224,224)", "rgb(245,245,245)"]; 
+                const colorMax = "rgb(4,123,255)";
+                let maxIndex = dataset.indexOf(Math.max.apply(Math, dataset));
+                let colors = [];                    
+                //generate color
+                let tmp = 0;
+                for (let i = 0; i < dataset.length; i++) {    
+                    if(i == maxIndex){
+                        colors.push(colorMax);
+                        tmp = 1;
+                    }else{
+                        colors.push(colorPattern[((i+tmp)%2)]); 
+                    }                                                      
+                }   
+                
+                return colors;              
+        }   
+        function moneyFormat(string){
                 /** 
                 * ! I/O is integer only
                 */
@@ -446,6 +235,535 @@
                 }
                 return stringRes;
             }   
+        function processData(result){
+            console.log(result);
+            console.log(typeof(result));
+            if(result != "0"){
+                document.getElementById("div-report").style.display = "block";
+                document.getElementById("no-result-alert").style.display = "none";
+                //------cal dataset for each chart--------
+                let resJson = JSON.parse(result);
+                console.log(result); 
+                console.log(resJson);                                                        
+                //------cal meta data---------------------
+                //--incomes                            
+                let bevIncome = 0;
+                let dishIncome = 0;
+                let snackIncome = 0;
+                let bevType = [];
+                let dishType = [];
+                let snackType = [];
+                let bevAmount = 0;
+                let dishAmount = 0;
+                let snackAmount = 0;                            
+                resJson.forEach(el => {                                
+                    switch (el.itemType) {
+                        case "1":   
+                        bevIncome += parseInt(el.cost) * parseInt(el.unit);  
+                        bevAmount += parseInt(el.unit);
+                        if(!bevType.includes(el.itemName)){
+                            bevType.push(el.itemName);                                        
+                        }                         
+                            break;
+                        case "2":       
+                        dishAmount += parseInt(el.unit); 
+                        dishIncome += parseInt(el.cost) * parseInt(el.unit);  
+                        if(!dishType.includes(el.itemName)){
+                            dishType.push(el.itemName);
+                        }                               
+                            break;
+                        case "3":   
+                        snackAmount += parseInt(el.unit);
+                        if(!snackType.includes(el.itemName)){
+                            snackType.push(el.itemName);
+                        }   
+                        snackIncome += parseInt(el.cost) * parseInt(el.unit);                                    
+                            break;
+                        default:
+                            break;
+                    }                                
+                });
+                metaGlobal = [];
+                metaGlobal = {
+                    "bevIncome": bevIncome,
+                    "dishIncome": dishIncome,
+                    "snackIncome": snackIncome,
+                    "totalIncome": bevIncome + dishIncome + snackIncome,
+                    "bevType": bevType,
+                    "dishType": dishType,
+                    "snackType": snackType,
+                    "bevAmount": bevAmount,
+                    "dishAmount": dishAmount,
+                    "snackAmount": snackAmount
+                };   
+                /** 
+                *! finished calculate metaGlobal
+                *TODO next calculate bev, dish, snack PieChart
+                */
+                bevPieLabels = metaGlobal.bevType;
+                bevPieDataset = [];
+                resJson.forEach(el => {
+                    if (bevPieDataset[bevPieLabels.indexOf(el.itemName)] == null) {
+                        bevPieDataset[bevPieLabels.indexOf(el.itemName)] = parseInt(el.unit);
+                    } else {
+                        bevPieDataset[bevPieLabels.indexOf(el.itemName)] += parseInt(el.unit);
+                    }
+                });
+                dishPieLabels = metaGlobal.dishType;
+                dishPieDataset = [];                
+                resJson.forEach(el => {
+                    if (dishPieDataset[dishPieLabels.indexOf(el.itemName)] == null) {
+                        dishPieDataset[dishPieLabels.indexOf(el.itemName)] = parseInt(el.unit);
+                    } else {
+                        dishPieDataset[dishPieLabels.indexOf(el.itemName)] += parseInt(el.unit);
+                    }
+                }); 
+                snackPieLabels = metaGlobal.snackType;
+                snackPieDataset = [];
+                resJson.forEach(el => {
+                    if (snackPieDataset[snackPieLabels.indexOf(el.itemName)] == null) {
+                        snackPieDataset[snackPieLabels.indexOf(el.itemName)] = parseInt(el.unit);
+                    } else {
+                        snackPieDataset[snackPieLabels.indexOf(el.itemName)] += parseInt(el.unit);
+                    }
+                });
+                /** 
+                *! finished calculate bev, dish, snack PieChart
+                *TODO next calculate ranking
+                */
+                let allItemType = metaGlobal.bevType.concat(metaGlobal.dishType.concat(metaGlobal.snackType));
+                let allItemAmount = bevPieDataset.concat(dishPieDataset.concat(snackPieDataset));
+                let tmpAllItemAmount = String(allItemAmount);
+                let tmp = [];
+                ranked = [];
+                tmpAllItemAmount = tmpAllItemAmount.split(",");
+                tmpAllItemAmount.forEach(el => {
+                    if (!tmp.includes(parseInt(el))) {
+                        tmp.push(parseInt(el));
+                    }
+                });
+                tmp.sort(function (a, b) { return b - a });//sort tmp DESC                            
+                for (let i = 0; i < tmp.length; i++) {
+                    for (let j = 0; j < allItemType.length; j++) {
+                        if (allItemAmount[j] == tmp[i])
+                            ranked.push(`#${i + 1}:${allItemType[j]} <span class='float-right text-primary'>${tmp[i]}</span>`);
+                    }
+                }
+                ranked = ranked.slice(0, 10); 
+                /** 
+                *! finished calculate ranking
+                *TODO next calculate time chart
+                */
+                timeChartDataset = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                let timeChartRes = JSON.parse(result);
+                let curHour = new Date();
+                curHour = curHour.getHours();//check from 6.00 -> curHour                            
+                timeChartRes.forEach(el => {
+                    let tmpTime = el.addDate;
+                    tmpTime = tmpTime.split(" ");
+                    tmpTime = tmpTime[1];
+                    tmpTime = tmpTime.slice(0, -3);
+                    el.addDate = tmpTime;
+                });
+                for (let i = 0; i < checkTime.length; i++) {    //checkTime                                                           
+                    for (let j = 0; j < timeChartRes.length; j++) {   //timeChartRes                                    
+                        if (checkTime[i] <= timeChartRes[j].addDate && timeChartRes[j].addDate < checkTime[i + 1]) {
+                            timeChartDataset[i] += parseInt(timeChartRes[j].unit);
+                        }
+                    }
+                } 
+                peakTime = checkTime[timeChartDataset.indexOf(Math.max.apply(Math, timeChartDataset))];               
+            }else{//result == 0 
+                console.log("result is 0");
+                document.getElementById("div-report").style.display = "none";
+                document.getElementById("no-result-alert").style.display = "block";
+            }     
+        }
+        function chartDestroy(){
+            sumPieChart.destroy();
+            bevPieChart.destroy();
+            dishPieChart.destroy();
+            snackPieChart.destroy();
+            timeLineChart.destroy();            
+        }
+        function reportRender(){ 
+            /**
+            *! render summary-pie
+            */           
+            let ctx = document.getElementById('pie-summary').getContext('2d');
+            sumPieChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'pie',
+
+                // The data for our dataset
+                data: {
+                    labels: ['bev', 'dish', 'snack'],
+                    datasets: [{
+                        backgroundColor: colorGenerator([metaGlobal.bevAmount, metaGlobal.dishAmount, metaGlobal.snackAmount]),
+                        borderColor: 'rgb(42,77,105)',
+                        data: [metaGlobal.bevAmount, metaGlobal.dishAmount, metaGlobal.snackAmount]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            });
+            document.getElementById("total-income").innerHTML = moneyFormat(metaGlobal.totalIncome.toString());
+            /**
+            *! render bev-pie
+            */
+            ctx = document.getElementById('pie-bev').getContext('2d');
+            bevPieChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: bevPieLabels,
+                    datasets: [{
+                        label: 'My First dataset',
+                        borderColor: 'rgb(42,77,105)',
+                        backgroundColor: colorGenerator(bevPieDataset),
+                        data: bevPieDataset
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+            document.getElementById("bev-income").innerHTML = moneyFormat(metaGlobal.bevIncome.toString());
+            /**
+            *! render dish-pie
+            */
+            ctx = document.getElementById('pie-dish').getContext('2d');
+            dishPieChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: dishPieLabels,
+                    datasets: [{
+                        label: 'My First dataset',
+                        borderColor: 'rgb(42,77,105)',
+                        backgroundColor: colorGenerator(dishPieDataset),
+                        data: dishPieDataset
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+            document.getElementById("dish-income").innerHTML = moneyFormat(metaGlobal.dishIncome.toString());
+            /**
+            *! render snack-pie
+            */
+            ctx = document.getElementById('pie-snack').getContext('2d');
+            snackPieChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: snackPieLabels,
+                    datasets: [{
+                        label: 'My First dataset',
+                        borderColor: 'rgb(42,77,105)',
+                        backgroundColor: colorGenerator(snackPieDataset),
+                        data: snackPieDataset
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+            document.getElementById("snack-income").innerHTML = moneyFormat(metaGlobal.snackIncome.toString());
+             /**
+            *! render ranking
+            */
+            let ul = document.createElement("UL");
+            ul.classList.add("list-group");
+            for (let i = 0; i < ranked.length; i++) {
+                let li = document.createElement("LI");
+                li.innerHTML = ranked[i];
+                li.classList.add("list-group-item");
+                ul.appendChild(li);
+            }
+            document.getElementById("menu-ranking").innerHTML = "";
+            document.getElementById("menu-ranking").appendChild(ul);
+             /**
+            *! render time chart
+            */
+            ctx = document.getElementById('line-time').getContext('2d');
+            timeLineChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: checkTime,
+                    datasets: [{
+                        backgroundColor: ['rgb(255, 255, 255)'],
+                        borderColor: 'rgb(4,123,255)',
+                        data: timeChartDataset
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Order in time ( Pieces ) '
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time ( 30min/cell )'
+                            }
+                        }]
+                    }
+                }
+            });
+             /**
+            *! render peak time
+            */
+            document.getElementById("peak-time").innerHTML = `~${peakTime}`;
+        }
+        function requestData(urlParameter){            
+            $.ajax({
+                    url: `/wb-app-03/ajax/service/reportService/reportService.php?${urlParameter}`,
+                    type: "GET",
+                    beforeSend: function () {
+                        console.log(`/wb-app-03/ajax/service/reportService/reportService.php?${urlParameter}`);
+                    },
+                    success: function (result) {                                                
+                        processData(result);
+                        chartDestroy();
+                        reportRender();
+                    }
+            });            
+        }
+        function changeInputType(type){
+            let single_el = document.getElementById("single-input");
+            let between_el = document.getElementById("between-input");
+            let s_date_input = document.getElementById("date-input");
+            let b_min_date_input = document.getElementById("min-date-input");
+            if(type == "1"){//single type
+                s_date_input.value = b_min_date_input.value;                
+                single_el.style.display = "flex";
+                between_el.style.display = "none";
+                singleChange();
+            }else if(type == "2"){//between type
+                b_min_date_input.value = s_date_input.value;                
+                between_el.style.display = "flex";
+                single_el.style.display = "none";
+                betweenChange();
+            }
+        }
+        function dateConvert(strDate){
+            let dateObj = new Date (strDate);
+            let result = String("0" + dateObj.getDate()).slice(-2) + "-" + String("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" + dateObj.getFullYear(); 
+            return result;
+        }
+        function betweenChange(){
+            let minDate = document.getElementById("min-date-input");
+            let maxDate = document.getElementById("max-date-input");
+            let textFilter = document.getElementById("text-filter");
+            textFilter.innerHTML = `${dateConvert(minDate.value)} to ${dateConvert(maxDate.value)}`;
+            requestData(`minDate=${minDate.value}&maxDate=${maxDate.value}`);
+        }
+        function singleChange(){
+            let date = document.getElementById("date-input");
+            let textFilter = document.getElementById("text-filter");
+            textFilter.innerHTML = `${dateConvert(date.value)}`;
+            requestData(`date=${date.value}`);
+        }
+        function initRender(){
+            /**
+            *! render summary-pie
+            */           
+            let ctx = document.getElementById('pie-summary').getContext('2d');
+            sumPieChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'pie',
+
+                // The data for our dataset
+                data: {
+                    labels: ['bev', 'dish', 'snack'],
+                    datasets: [{
+                        backgroundColor: colorGenerator([1, 1, 2]),
+                        borderColor: 'rgb(42,77,105)',
+                        data: [1, 1, 2]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            });
+            document.getElementById("total-income").innerHTML = moneyFormat("1000");
+            /**
+            *! render bev-pie
+            */
+            ctx = document.getElementById('pie-bev').getContext('2d');
+            bevPieChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: bevPieLabels,
+                    datasets: [{
+                        borderColor: 'rgb(42,77,105)',
+                        backgroundColor: colorGenerator([1, 1, 2]),
+                        data: [1, 1, 2]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+            document.getElementById("bev-income").innerHTML = moneyFormat("1000");
+            /**
+            *! render dish-pie
+            */
+            ctx = document.getElementById('pie-dish').getContext('2d');
+            dishPieChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: dishPieLabels,
+                    datasets: [{
+                        borderColor: 'rgb(42,77,105)',
+                        backgroundColor: colorGenerator([1, 1, 2]),
+                        data: [1, 1, 2]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+            document.getElementById("dish-income").innerHTML = moneyFormat("1000");
+            /**
+            *! render snack-pie
+            */
+            ctx = document.getElementById('pie-snack').getContext('2d');
+            snackPieChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: snackPieLabels,
+                    datasets: [{
+                        borderColor: 'rgb(42,77,105)',
+                        backgroundColor: colorGenerator([1, 1, 2]),
+                        data: [1, 1, 2]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            });
+            document.getElementById("snack-income").innerHTML = moneyFormat("1000");
+             /**
+            *! render ranking
+            */
+            let ul = document.createElement("UL");
+            ul.classList.add("list-group");
+            for (let i = 0; i < ranked.length; i++) {
+                let li = document.createElement("LI");
+                li.innerHTML = ranked[i];
+                li.classList.add("list-group-item");
+                ul.appendChild(li);
+            }
+            document.getElementById("menu-ranking").innerHTML = "";
+            document.getElementById("menu-ranking").appendChild(ul);
+             /**
+            *! render time chart
+            */
+            ctx = document.getElementById('line-time').getContext('2d');
+            timeLineChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: checkTime,
+                    datasets: [{
+                        backgroundColor: ['rgb(255, 255, 255)'],
+                        borderColor: 'rgb(4,123,255)',
+                        data: timeChartDataset
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Order in time ( Pieces ) '
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time ( 30min/cell )'
+                            }
+                        }]
+                    }
+                }
+            });
+             /**
+            *! render peak time
+            */
+            document.getElementById("peak-time").innerHTML = `~06:00`;
+
+        }
+        
         //-------------------------                  
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

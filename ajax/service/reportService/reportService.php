@@ -9,7 +9,7 @@
     return 0 [wrong]
     return jsonstring [ok]
 */
-if (isset($_GET['date'])) {
+if (isset($_GET['date']) || isset($_GET['minDate']) || isset($_GET['maxDate'])) {
     $host = "localhost";
     $username = "root";
     $password = "";
@@ -17,7 +17,7 @@ if (isset($_GET['date'])) {
 
     $conn = new mysqli($host, $username, $password, $database);
     mysqli_set_charset($conn, "utf8");
-
+    
     $sql = "SELECT 
     done_trans.id as id, 
     done_trans.order_id as order_id, 
@@ -36,15 +36,16 @@ if (isset($_GET['date'])) {
     JOIN agent ON done_trans.agent_id = agent.id
     WHERE done_trans.add_date ";
 
-    if (isset($_GET['minTime']) && isset($_GET['maxTime'])) {
+    if (isset($_GET['minDate']) && isset($_GET['maxDate'])) {
         //date-time filtering
-        $sql .= "BETWEEN '$_GET[date] $_GET[minTime]:00' AND '$_GET[date] $_GET[maxTime]:00'";
+        $sql .= "BETWEEN '$_GET[minDate]' AND '$_GET[maxDate]'";
     } else {
         //only date filtering
         $sql .= "LIKE '$_GET[date]%'";
     }
-
-    $sql .= "ORDER BY done_trans.id ASC";
+    
+    $sql .= "ORDER BY done_trans.id ASC";  
+    
 
     $res = mysqli_query(
         $conn,
