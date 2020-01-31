@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>   
+    <script src="/wb-app-03/assets/chartjs/Chart.js"></script>
     <script src="/wb-app-03/js/main.js"></script>
     <link href="../assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -17,17 +18,434 @@
 <body style="display:none">
     <div id="navbar-main">
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid">        
         <div class="container-fluid mt-3">
-                      
+            <!-- controller -->
+            <div class="row" id="controller">
+                <div class="col-2">  
+                    <!-- select item type -->
+                    <div class="input-group-prepend text-center float-left">                        
+                        <div class="form-group">
+                            <div class="form-group">                             
+                              <select class="form-control" name="" id="select-item-type" onchange="selectItemTypeChange(this.value)">
+                                <option value="1" selected>Beverage</option>
+                                <option value="2">Dish</option>
+                                <option value="3">Snack</option>
+                              </select>
+                            </div>
+                        </div>           
+                    </div> 
+                    <!-- select item -->
+                    <div class="input-group-prepend text-center float-left ml-2">                        
+                        <div class="form-group">
+                            <div class="form-group">                             
+                              <select class="form-control" name="" id="select-item-bev" onchange="requestData(genURLParameter())">
+                                <option selected disabled>empty</option>
+                              </select>
+                              <select class="form-control" name="" id="select-item-dish" onchange="requestData(genURLParameter())" style="display: none;">
+                                <option selected disabled>empty</option>                              
+                            </select>
+                              <select class="form-control" name="" id="select-item-snack" onchange="requestData(genURLParameter())" style="display: none;">
+                                <option selected disabled>empty</option>                              
+                            </select>
+                            </div>
+                        </div>           
+                    </div>                 
+                </div>
+                <div class="col-4">
+                    <div class="input-group-prepend text-center float-left mr-2">                        
+                        <div class="form-group">
+                            <div class="form-group">                             
+                              <select class="form-control" name="" id="select-date-type" onchange="selectDateTypeChange(this.value)">
+                                <option value="1" selected>single</option>
+                                <option value="2">between</option>
+                              </select>
+                            </div>
+                        </div>           
+                    </div>
+                    <!-- single input -->
+                    <div id="single-date-input">
+                        <div class="input-group-prepend text-center float-left">                            
+                            <div class="form-group">
+                                <input class="form-control" type="date" id="en-single-date-input" onchange="requestData(genURLParameter())">
+                            </div>
+                            <p class="my-2 mx-2 text-secondary">to</p>
+                            <div class="form-group">
+                                <input class="form-control" type="date" id="dis-single-date-input" onchange="" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- between input -->  
+                    <div id="between-date-input" style="display: none;">
+                        <div class="input-group-prepend text-center float-left">
+                            <div class="form-group">
+                                <input class="form-control" type="date" id="min-between-date-input" onchange="requestData(genURLParameter())">
+                            </div>
+                            <p class="my-2 mx-2">to</p>
+                            <div class="form-group">
+                                <input class="form-control" type="date" id="max-between-date-input" onchange="requestData(genURLParameter())">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <p class="my-2 mx-5 text-secondary text-right h4" id="text-filter"></p>
+                </div>
+            </div>  
+            <!-- display -->
+            <div class="row mx-4" id="display" style="display: none;">
+                <div class="col-2 ">
+                    <div class="row">
+                        <p class=" mx-2 my-2 my-1 h4" style="width: 100%;">Sales (unit) <span class="float-right text-primary" id="sales">5000</span></p>
+                    </div>
+                    <div class="row">
+                        <p class=" mx-2 my-2 my-1 h4" style="width: 100%;">incomes (฿) <span class="float-right text-primary" id="incomes">5,000</span></p>
+                    </div>
+                    <div class="row">
+                        <p class=" mx-2 my-2 my-1 h4" style="width: 100%;">peak-time <span class="float-right text-primary" id="peak-time">~06.00</span></p>
+                    </div>
+                </div>
+                <div class="col-10 ">
+                    <canvas id="line-time" width="400" height="150" role="img">
+                    </canvas>
+                </div>
+            </div>
+            <!-- result zero display -->
+            <div id="no-result-alert" style="margin-top: 300px;margin-bottom: auto;display: none;">        
+                <p class="h3 text-secondary text-center">No data for selected option.</p>        
+            </div>  
         </div>        
     </div>
     <script>
         checkToken(sessionStorage.wbUsr, sessionStorage.wbToken);
         $('#navbar-main').load("../components/navbar-main/navbar-main.html #navbar-main");
         $.getScript("../components/navbar-main/navbar-main.js");
-        //-------------------------        
+        //-------------------------    
+        var t_days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+        var t_n = new Date();
+        var t_y = t_n.getFullYear();
+        var t_m = t_n.getMonth() + 1;
+        var t_d = t_n.getDate();
+        var t_ds = t_n.getDay();
+        var current_date = `${t_y}-${String("0" + t_m).slice(-2)}-${t_d}`;
+        console.log(current_date);
+
+        var allItem;
+        var bevType = [];
+        var dishType = [];
+        var snackType = [];
         
+        var sales = 0;
+        var incomes = 0;
+
+        var dateDiff = 0;
+
+        var timeChartDataset = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        var checkTime = ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00','13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'];
+        var peakTime;
+
+        var timeLineChart;
+
+
+        $(document).ready(function (){
+            document.getElementById("en-single-date-input").value = current_date;
+            document.getElementById("min-between-date-input").value = current_date;
+            $.ajax({
+                url: `/wb-app-03/ajax/service/item.php?type=0`,
+                type: "GET",
+                beforeSend: function () {
+                    console.log(`/wb-app-03/ajax/service/item.php?type=0`);
+                },
+                success: function (result) {
+                    allItem = JSON.parse(result);                    
+                    allItem.forEach(el => {
+                        if(el.type == "1"){
+                            bevType.push(el);
+                        }else if(el.type == "2"){
+                            dishType.push(el);
+                        }else if(el.type == "3"){
+                            snackType.push(el);
+                        }
+                    });
+                    let bevOption = document.getElementById("select-item-bev");
+                    bevOption.innerHTML = '';
+                    bevType.forEach(el => {
+                        let option = document.createElement("option");    
+                        option.text = el.name;
+                        option.value = el.id;
+                        bevOption.add(option);             
+                    });
+                    let dishOption = document.getElementById("select-item-dish");
+                    dishOption.innerHTML = '';
+                    dishType.forEach(el => {
+                        let option = document.createElement("option");    
+                        option.text = el.name;
+                        option.value = el.id;
+                        dishOption.add(option);             
+                    });
+                    let snackOption = document.getElementById("select-item-snack");
+                    snackOption.innerHTML = '';
+                    snackType.forEach(el => {
+                        let option = document.createElement("option");    
+                        option.text = el.name;
+                        option.value = el.id;
+                        snackOption.add(option);             
+                    });  
+                    renderInit();
+                    requestData(genURLParameter());                  
+                }
+            }); 
+        })   
+        function selectItemTypeChange(value){
+            let bevOption = document.getElementById("select-item-bev");
+            let dishOption = document.getElementById("select-item-dish");
+            let snackOption = document.getElementById("select-item-snack");
+            if(value == 1){//show bev option
+                bevOption.style.display = 'flex';
+                dishOption.style.display = 'none';
+                snackOption.style.display = 'none';
+            }else if(value == 2){//show dish option
+                bevOption.style.display = 'none';
+                dishOption.style.display = 'flex';
+                snackOption.style.display = 'none';
+            }else if(value == 3){//show snack option
+                bevOption.style.display = 'none';
+                dishOption.style.display = 'none';
+                snackOption.style.display = 'flex';
+            }
+            requestData(genURLParameter());
+        }       
+        function selectDateTypeChange(value){
+            let singleOption = document.getElementById("single-date-input");
+            let betweenOption = document.getElementById("between-date-input");
+            let singleFirstValue = document.getElementById("en-single-date-input").value;
+            let betweenFirstValue = document.getElementById("min-between-date-input").value;            
+            if(value == 1){//show single option   
+                document.getElementById("en-single-date-input").value = document.getElementById("min-between-date-input").value;
+                singleOption.style.display = "flex";
+                betweenOption.style.display = "none";
+            }else if(value == 2){//show between option
+                document.getElementById("min-between-date-input").value = document.getElementById("en-single-date-input").value;
+                betweenOption.style.display = "flex";
+                singleOption.style.display = "none";
+            }
+        }
+        function genURLParameter(){
+            let urlParameter;
+            let dateType = document.getElementById("select-date-type");
+            let itemType = document.getElementById("select-item-type");  
+            let itemId;
+            let textFilter = ``;
+            switch (itemType.value) {
+                case "1":  
+                    itemId = document.getElementById("select-item-bev");
+                    break;
+                case "2":     
+                    itemId = document.getElementById("select-item-dish");               
+                    break;
+                case "3":    
+                    itemId = document.getElementById("select-item-snack");                
+                    break;
+                default:
+                    break;
+            }       
+            textFilter = `${itemId[itemId.selectedIndex].text} at `;
+            if(dateType.value == 1){//single date type
+                let singleDate = document.getElementById("en-single-date-input");
+                urlParameter = `date=${singleDate.value}`;
+                textFilter += `${dateConvert(singleDate.value)}`;
+            }else if(dateType.value == 2){//between date type
+                let minDate = document.getElementById("min-between-date-input");
+                let maxDate = document.getElementById("max-between-date-input");
+                if(maxDate.value == ""){
+                    textFilter += `""`;
+                    return "";
+                }else{
+                    let d1 = new Date(minDate.value);
+                    let d2 = new Date(maxDate.value);
+                    dateDiff = ((d2 - d1)/(1000 * 3600 * 24));
+                    urlParameter = `minDate=${minDate.value}&maxDate=${maxDate.value}`;
+                    textFilter += `${dateConvert(minDate.value)} to ${dateConvert(maxDate.value)} (${dateDiff})`;
+                }
+            }
+            urlParameter += `&itemId=${itemId.value}`;
+            document.getElementById("text-filter").innerText = textFilter;
+            return urlParameter;
+        }
+        function requestData(urlParameter) {
+            if (urlParameter != "") {
+                $.ajax({
+                    url: `/wb-app-03/ajax/service/reportService/reportServiceItemFilter.php?${urlParameter}`,
+                    type: "GET",
+                    beforeSend: function () {
+                        console.log(`/wb-app-03/ajax/service/reportService/reportServiceItemFilter.php?${urlParameter}`);
+                    },
+                    success: function (result) {
+                        if(result != "0"){
+                            document.getElementById("display").style.display = "flex";
+                            document.getElementById("no-result-alert").style.display = "none";
+                            console.log(result);
+                            processData(result);
+                            renderReport();
+                        }else{
+                            document.getElementById("display").style.display = "none";
+                            document.getElementById("no-result-alert").style.display = "block";
+                            console.log(result);
+                        }
+                    }
+                });
+            }
+        }
+        function processData(result) {
+            let jsonResult = JSON.parse(result);
+            sales = 0;
+            incomes = 0;
+            jsonResult.forEach(el => {
+                sales += parseInt(el.unit);
+                incomes += parseInt(parseInt(el.unit) * parseInt(el.cost));
+            });
+            console.log(`sales = ${sales}`);
+            console.log(`incomes = ${incomes}`);
+            /**
+             * !time chart data calculating
+            */
+            timeChartDataset = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                let timeChartRes = JSON.parse(result);
+                let curHour = new Date();
+                curHour = curHour.getHours();//check from 6.00 -> curHour                            
+                timeChartRes.forEach(el => {
+                    let tmpTime = el.addDate;
+                    tmpTime = tmpTime.split(" ");
+                    tmpTime = tmpTime[1];
+                    tmpTime = tmpTime.slice(0, -3);
+                    el.addDate = tmpTime;
+                });
+                for (let i = 0; i < checkTime.length; i++) {    //checkTime                                                           
+                    for (let j = 0; j < timeChartRes.length; j++) {   //timeChartRes                                    
+                        if (checkTime[i] <= timeChartRes[j].addDate && timeChartRes[j].addDate < checkTime[i + 1]) {
+                            timeChartDataset[i] += parseInt(timeChartRes[j].unit);
+                        }
+                    }
+                }
+            peakTime = checkTime[timeChartDataset.indexOf(Math.max.apply(Math, timeChartDataset))];
+        }
+        function renderReport(){
+            let reportSales = document.getElementById("sales");
+            let reportIncomes = document.getElementById("incomes");
+            reportSales.innerText = sales;
+            reportIncomes.innerText = moneyFormat(String(incomes));
+            timeLineChart.destroy();
+            let ctx = document.getElementById('line-time').getContext('2d');
+            timeLineChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: checkTime,
+                    datasets: [{
+                        backgroundColor: ['rgb(255, 255, 255)'],
+                        borderColor: 'rgb(4,123,255)',
+                        data: timeChartDataset
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Order in time ( Pieces ) '
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time ( 30min/cell )'
+                            }
+                        }]
+                    }
+                }
+            });
+            document.getElementById("peak-time").innerText = `~${peakTime}`;
+        }
+        function moneyFormat(string){
+                /** 
+                * ! I/O is integer only
+                */
+                let arrChar = string.split('');
+                arrChar.reverse();
+                let groupRes = [];
+                let tmp = [];
+                for (let i = 0; i < arrChar.length; i++) {                                    
+                    tmp.push(arrChar[i]);
+                    if((i+1)%3 == 0 || i == (arrChar.length - 1)){
+                        groupRes.push(tmp.reverse().join(""));
+                        tmp = [];
+                    }
+                }
+                groupRes.reverse();
+                let stringRes = '';
+                if(groupRes.length == 1){
+                    stringRes = groupRes[0];
+                }else{
+                    groupRes.forEach(el => {
+                        stringRes += `${el},`;
+                    });
+                    stringRes = stringRes.slice(0,-1);
+                }
+                return stringRes;
+        }   
+        function dateConvert(strDate){
+            let dateObj = new Date (strDate);
+            let result = String("0" + dateObj.getDate()).slice(-2) + "-" + String("0" + (dateObj.getMonth() + 1)).slice(-2) + "-" + dateObj.getFullYear(); 
+            return result;
+        }
+        function renderInit(){
+            /**
+             * ! render init chart
+            */
+            let ctx = document.getElementById('line-time').getContext('2d');
+            timeLineChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: checkTime,
+                    datasets: [{
+                        backgroundColor: ['rgb(255, 255, 255)'],
+                        borderColor: 'rgb(4,123,255)',
+                        data: timeChartDataset
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Order in time ( Pieces ) '
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time ( 30min/cell )'
+                            }
+                        }]
+                    }
+                }
+            });
+        }
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="../assets/bootstrap/js/bootstrap.js" crossorigin="anonymous"></script>

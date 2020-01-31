@@ -20,15 +20,16 @@
         mysqli_set_charset($conn, "utf8");
 
         if($_GET['type'] == 0){
-            $sql = "SELECT name, item_type FROM items ORDER BY item_type";
+            $sql = "SELECT id, name, item_type FROM items ORDER BY item_type";
         }else{            
-            $sql = "SELECT name, item_type FROM items WHERE item_type = $_GET[type]";
+            $sql = "SELECT id, name, item_type FROM items WHERE item_type = $_GET[type]";
         }
 
         $result = mysqli_query($conn, $sql);
         $jsonStr = "[";
         while($row = mysqli_fetch_array($result)){
             $tmpObj = new stdClass();
+            $tmpObj->id = $row['id'];
             $tmpObj->name = $row['name'];
             $tmpObj->type = $row['item_type'];
 

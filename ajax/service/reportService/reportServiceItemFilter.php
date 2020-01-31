@@ -6,12 +6,12 @@
     |
     - maxTime (use for filter record)
 
-    - type (use for type filter)    
+    - itemId (use for type filter)    
 
     return 0 [wrong]
     return jsonstring [ok]
 */
-if (isset($_GET['date']) || isset($_GET['minDate']) || isset($_GET['maxDate']) && isset($_GET['type'])) {
+if (isset($_GET['date']) || isset($_GET['minDate']) || isset($_GET['maxDate']) && isset($_GET['itemId'])) {
     $host = "localhost";
     $username = "root";
     $password = "";
@@ -36,7 +36,7 @@ if (isset($_GET['date']) || isset($_GET['minDate']) || isset($_GET['maxDate']) &
     JOIN customers ON done_trans.cus_id = customers.id
     JOIN items ON done_trans.item_id = items.id
     JOIN agent ON done_trans.agent_id = agent.id
-    WHERE items.item_type = $_GET[type] && done_trans.add_date ";
+    WHERE done_trans.item_id = $_GET[itemId] && done_trans.add_date ";
 
     if (isset($_GET['minDate']) && isset($_GET['maxDate'])) {
         //date-time filtering

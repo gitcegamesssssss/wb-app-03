@@ -12,13 +12,7 @@
     <script src="/wb-app-03/assets/chartjs/Chart.js"></script>
     <script src="/wb-app-03/js/main.js"></script>
     <link href="../assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        .vl {
-          border-left: 6px solid green;
-          
-        }
-        </style>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">    
 </head>
 
 <body style="display:none">
@@ -27,11 +21,8 @@
     <div class="container-fluid" id="main">
         <div class="report-controller">
             <div class="row mt-3">
-                <div class="col-6">
-                    <p class="my-2 mx-5 text-secondary text-left h4" id="text-filter"></p>                    
-                </div>
-                <div class="col-2">
-                    <div class="input-group-prepend text-center float-right">                        
+                <div class="col-1">
+                    <div class="input-group-prepend text-center float-left">                        
                         <div class="form-group">
                             <div class="form-group">                             
                               <select class="form-control" name="" id="" onchange="changeInputType(this.value);">
@@ -42,7 +33,7 @@
                         </div>           
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-5">
                     <!-- single input -->
                     <div id="single-input">
                         <div class="input-group-prepend text-center float-left">
@@ -70,8 +61,12 @@
                         </div>
                     </div>                
                 </div>
+                <div class="col-6">
+                    <p class="my-2 mx-5 text-secondary text-right h4" id="text-filter"></p>                    
+                </div>
             </div>
         </div>
+        <div class="dropdown-divider mt-1"></div>
         <div id="div-report">
             <!--piechart-->
             <div class="row mt-3 mx-3">
