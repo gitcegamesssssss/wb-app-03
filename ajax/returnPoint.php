@@ -16,7 +16,9 @@
     $row_sql_point = mysqli_fetch_array($res_sql_point);
     $sql = "UPDATE customers SET point = point - $row_sql_point[point] WHERE id = $row_sql_point[cus_id]";  
 
-    mysqli_query($conn, $sql);
+    if($row_sql_point['cus_id'] != 1){        
+        mysqli_query($conn, $sql);
+    }
     echo $sql;
 
 

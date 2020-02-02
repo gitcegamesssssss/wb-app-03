@@ -15,13 +15,13 @@ $loginPwd = $_POST['password'];
 if($conn->connect_error){
     die('0');
 }else {    
-    $result = mysqli_query($conn, "SELECT id, hash FROM agent WHERE username = '$loginUsr'");    
+    $result = mysqli_query($conn, "SELECT id, hash, type FROM agent WHERE username = '$loginUsr'");    
     $row = mysqli_fetch_array($result);    
     if(strtoupper(hash('sha256', $loginPwd)) == $row['hash']){
         //password OK -> generate token
         $token = strtoupper(hash('sha256', $loginPwd.rand(0,99)));
         mysqli_query($conn, "UPDATE agent SET token = '$token' WHERE id = $row[id]");        
-        die("$token $row[id]");        
+        die("$token $row[id] $row[type]");        
     }        
     else 
         die('1');

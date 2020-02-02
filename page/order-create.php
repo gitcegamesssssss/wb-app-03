@@ -19,21 +19,21 @@ $order_id = $order_id['cur_order_id'] + 1;
             background: white;
         }
     </style>
-    <title>+Order create</title>
+    <title>Order create</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="/wb-app-03/js/main.js"></script>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
-    <link href="../assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <script src="/wb-app-03/assets/jQuery-3.4.1/jquery-3.4.1.min.js"></script>   
+    <script src="/wb-app-03/js/main.js"></script>
+    <link href="/wb-app-03/assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/wb-app-03/assets/w3/w3.css">
 </head>
 
-<body style="display:none">
-    <div class="" id="navbar-main">
+<body>
+    <div id="navbar-main">
     </div>
     <div class="container-fluid m-3">
         <div class="row">
@@ -396,7 +396,7 @@ $order_id = $order_id['cur_order_id'] + 1;
             </div>
             <!-- modal-scan-user -->
             <div class="modal fade" id="modal-scan-user">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-dialog-top">
                     <div class="modal-content">
                         <!-- Modal Header -->
                         <div class="modal-header">
@@ -408,7 +408,7 @@ $order_id = $order_id['cur_order_id'] + 1;
                             <div class="container-fluid">
                                 <div class="form-group">
                                     <label for=""></label>
-                                    <input type="tel" class="form-control" name="" id="" aria-describedby="helpId" placeholder="type phone number . . ." oninput="userScan(this.value)">
+                                    <input type="tel" class="form-control" aria-describedby="helpId" placeholder="type phone number . . ." oninput="userScan(this.value)">
                                 </div>
                                 <div id="user-show">
                                 </div>
@@ -849,9 +849,7 @@ $order_id = $order_id['cur_order_id'] + 1;
         }
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="../assets/bootstrap/js/bootstrap.bundle.js" crossorigin="anonymous"></script>
-    <script src="../assets/bootstrap/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="../assets/bootstrap/js/bootstrap.js" crossorigin="anonymous"></script>
+    <script src="/wb-app-03/assets/bootstrap/js/bootstrap.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

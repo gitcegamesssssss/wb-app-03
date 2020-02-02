@@ -28,6 +28,10 @@ switch (page) {
     default:
         break;
 }
+
+if(sessionStorage.wbUserType == 1){
+    document.getElementById("report").style.display = "none";
+}
 /*$('.nav-item .nav-link').click(function () {
     $('.nav-item .nav-link').removeClass("active");
     $(this).toggleClass("active");

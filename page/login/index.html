@@ -27,6 +27,12 @@
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<!--===============================================================================================-->
+    <link rel="stylesheet" href="/wb-app-03/assets/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>   
+    <script src="/wb-app-03/js/main.js"></script>
+    <link href="/wb-app-03/assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 </head>
 
 <body>
@@ -38,24 +44,22 @@
 					<span class="login100-form-title p-b-51">
 						Whiteblue's coffee
 					</span>
-
-
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Username is required">
 						<input class="input100" type="text" name="username" id="username" placeholder="Username" autofocus>
 						<span class="focus-input100"></span>
 					</div>
-
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Password is required">
 						<input class="input100" type="password" name="password" id="password" placeholder="Password">
 						<span class="focus-input100"></span>
-					</div>
-
-					<div class="container-login100-form-btn mt-3">
-						<button class="login100-form-btn" onclick="login()">
-							Login
-						</button>
 					</div>				
 				</form>				
+				<div class="container-login100-form-btn mt-3">
+					<button class="login100-form-btn" onclick="login()" id="login-button">
+						<div class="spinner-border" role="status" id="loading" style="display: none;">
+						</div>
+						<div id="login-text">Login</div>							
+					</button>
+				</div>			
 			</div>
 		</div>
 	</div>
@@ -63,12 +67,59 @@
 
 	<div id="dropDownSelect1"></div>
 	<script>
-		//sessionStorage.clear();		
+		//sessionStorage.clear();	
+		$(document).ready(function (){
+			let input_username = document.getElementById("username");
+			let input_password = document.getElementById("password");
+			input_username.addEventListener("keyup", function (event) {
+				if (event.keyCode === 13) {
+					event.preventDefault();
+					document.getElementById("login-button").click();
+				}
+			});
+			input_password.addEventListener("keyup", function (event) {
+				if (event.keyCode === 13) {
+					event.preventDefault();
+					document.getElementById("login-button").click();
+				}
+			});
+
+			console.log("welcome to login page");
+		});	
 		function login() {			
 			var username = document.getElementById("username").value;
 			var password = document.getElementById("password").value;
 			//console.log(`username = ${username} password = ${password}`);
-			$.post("/wb-app-03/ajax/login.php",
+			document.getElementById("loading").style.display = "block";
+			document.getElementById("login-text").style.display = "none";
+			$.ajax({
+				url: "/wb-app-03/ajax/login.php",
+				type: "post",
+				data: {
+					username: `${username}`,
+					password: `${password}`
+				},
+				success: function (data){
+					console.log(data);
+					if(data == '0' || data == '1'){	
+						alert("something went wrong!");
+						//window.location.href = "/wb-app-03/page/login/";											
+					}else{
+						//save token						
+						var splitedData = data.split(" ");
+						sessionStorage.setItem("wbUsr", username);
+						sessionStorage.setItem("wbToken", splitedData[0]);
+						sessionStorage.setItem("wbUsrId", splitedData[1]);
+						sessionStorage.setItem("wbUserType", splitedData[2]);
+						alert(`saved token :\n '${splitedData[2]}'`);
+						window.location.href = "/wb-app-03/page/jobs-current.html";
+					}	
+					document.getElementById("loading").style.display = "none";
+					document.getElementById("login-text").style.display = "block";
+				}
+			})
+			
+			/*$.post("/wb-app-03/ajax/login.php",
 				{
 					username: `${username}`,
 					password: `${password}`
@@ -85,13 +136,17 @@
 						sessionStorage.setItem("wbUsr", username);
 						sessionStorage.setItem("wbToken", splitedData[0]);
 						sessionStorage.setItem("wbUsrId", splitedData[1]);
-						alert(`saved token :\n '${data}'`);
+						sessionStorage.setItem("wbUserType", splitedData[2]);
+						alert(`saved token :\n '${splitedData[2]}'`);
 						window.location.href = "/wb-app-03/page/jobs-current.html";
 					}	
+					document.getElementById("loading").style.display = "none";
 				}
-			);
+			);*/
 		}
 	</script>
+
+	<script src="/wb-app-03/assets/bootstrap/js/bootstrap.js" crossorigin="anonymous"></script>
 	<!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 	<!--===============================================================================================-->
