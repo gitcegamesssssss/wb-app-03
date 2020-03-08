@@ -214,10 +214,9 @@ $sql =
                             <span class='oi oi-circle-check'></span> ARCHIVE</button>
 
                             <button type='button' class='btn btn-danger btn-sm' onclick='delRecord($row[id]);'>
-                            <span class='oi oi-circle-x'></span> DELETE</button>
-                            id -> $row[id]
+                            <span class='oi oi-circle-x'></span> DELETE</button>                            
                             </td>  
-                            <td class='text-center'>set to 
+                            <td class='text-center'>
                             <button type='button' class='btn btn-outline-danger btn-sm' onclick='setStat2Rec($row[id]);'>R</button>
                             <button type='button' class='btn btn-outline-warning btn-sm' onclick='setStat2Prog($row[id]);'>P</button>
                             <button type='button' class='btn btn-outline-success btn-sm' onclick='setStat2Done($row[id]);'>D</button>

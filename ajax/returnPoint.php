@@ -10,7 +10,7 @@
     $sql_point = 
     "SELECT SUM(proc_trans.unit) as point, proc_trans.cus_id, items.item_type 
     FROM proc_trans JOIN items ON proc_trans.item_id = items.id 
-    WHERE proc_trans.order_id = $_GET[orderId]";
+    WHERE proc_trans.order_id = $_GET[orderId] AND items.item_type = 1";
 
     $res_sql_point = mysqli_query($conn, $sql_point);
     $row_sql_point = mysqli_fetch_array($res_sql_point);

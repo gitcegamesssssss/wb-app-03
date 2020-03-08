@@ -17,7 +17,7 @@ $res = mysqli_query(
     proc_trans.work_stat as stat
     FROM proc_trans JOIN 
     items ON proc_trans.item_id = items.id 
-    WHERE items.item_type = 1 AND proc_trans.work_stat <> 2   
+    WHERE items.item_type = $_GET[type] AND proc_trans.work_stat <> 2   
     LIMIT 1"
 );
 
