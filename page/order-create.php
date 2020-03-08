@@ -30,6 +30,7 @@ $order_id = $order_id['cur_order_id'] + 1;
     <script src="/wb-app-03/js/main.js"></script>
     <link href="/wb-app-03/assets/icon/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="/wb-app-03/assets/w3/w3.css">
+    <link rel="icon" href="/wb-app-03/icon/lowercase_letter_w_blue-512.png" sizes="16x16" type="image/png">
 </head>
 
 <body>
