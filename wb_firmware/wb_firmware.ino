@@ -18,15 +18,17 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 IPAddress server_ip = {192, 168, 137, 176}; //IP of TCP server
 WiFiServer server(SERVER_PORT);
 
+#define STATIONMODE 2 //1 = bev , 2 = dish
+
 //WiFi definition
 const char *ssid = "VIPAD";
 const char *password = "cegame12";
 
 //Service definition
-const String service_ip = "192.168.1.20";
+const String service_ip = "192.168.1.3";
 const String service_del_order = "http://" + service_ip + "/wb-app-03/ajax/service/deleteOrder.php";
 const String service_move_prog_2_done = "http://" + service_ip + "/wb-app-03/ajax/service/moveProg2Done.php";
-const String service_request_order = "http://" + service_ip + "/wb-app-03/ajax/service/requestOrder.php";
+const String service_request_order = "http://" + service_ip + "/wb-app-03/ajax/service/requestOrder.php?type=" + STATIONMODE;
 const String service_stat_2_done = "http://" + service_ip + "/wb-app-03/ajax/service/stat2Done.php";
 const String service_stat_2_prog = "http://" + service_ip + "/wb-app-03/ajax/service/stat2Prog.php";
 const String service_stat_2_rec = "http://" + service_ip + "/wb-app-03/ajax/service/stat2Rec.php";
@@ -97,7 +99,11 @@ void setup() {
   display.println(WiFi.localIP());
   //start TCP server
   server.begin();
-  display.println("TCP-SERVER-START");
+  if (STATIONMODE == 1) {
+    display.println("BEV-STATION");
+  } else {
+    display.println("DISH-STATION");
+  }
   Serial.println("TCP server start");
   display.display();
 }
@@ -180,8 +186,8 @@ START:
       if (D_state == 1) {
         switch (result[0].stat.toInt()) {
           case 0:
-          displayCenter("Reseting..");
-          delay(1000);
+            displayCenter("Reseting..");
+            delay(1000);
             goto START;
             break;
           case 1:
