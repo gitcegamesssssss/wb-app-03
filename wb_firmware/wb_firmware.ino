@@ -21,11 +21,11 @@ WiFiServer server(SERVER_PORT);
 #define STATIONMODE 2 //1 = bev , 2 = dish
 
 //WiFi definition
-const char *ssid = "VIPAD";
-const char *password = "cegame12";
+const char *ssid = "wifi-Seagame";
+const char *password = "123456789";
 
 //Service definition
-const String service_ip = "192.168.1.3";
+const String service_ip = "192.168.1.6";
 const String service_del_order = "http://" + service_ip + "/wb-app-03/ajax/service/deleteOrder.php";
 const String service_move_prog_2_done = "http://" + service_ip + "/wb-app-03/ajax/service/moveProg2Done.php";
 const String service_request_order = "http://" + service_ip + "/wb-app-03/ajax/service/requestOrder.php?type=" + STATIONMODE;
@@ -50,8 +50,8 @@ char loading[4] = {'|', '/', '-', '\\'};//for loading animation
 char statSymbol[3] = {'R', 'P', 'D'};
 
 //button definition
-#define button_up D7
-#define button_down D8
+#define button_up D8
+#define button_down D7
 
 
 void setup() {
@@ -106,6 +106,9 @@ void setup() {
   }
   Serial.println("TCP server start");
   display.display();
+  while(digitalRead(button_up) == LOW && digitalRead(button_down) == LOW){
+    delay(100);
+  }
 }
 
 void loop() {
@@ -139,6 +142,9 @@ START:
       }*/
   } else {
     //display order
+      //debug********************
+        Serial.println(payload);
+      //*************************
     str2arr(payload, 1);
     displayLayout();
     //loop for button press
