@@ -25,7 +25,7 @@ const char *ssid = "wifi-Seagame";
 const char *password = "123456789";
 
 //Service definition
-const String service_ip = "192.168.1.6";
+const String service_ip = "192.168.1.2";
 const String service_del_order = "http://" + service_ip + "/wb-app-03/ajax/service/deleteOrder.php";
 const String service_move_prog_2_done = "http://" + service_ip + "/wb-app-03/ajax/service/moveProg2Done.php";
 const String service_request_order = "http://" + service_ip + "/wb-app-03/ajax/service/requestOrder.php?type=" + STATIONMODE;
